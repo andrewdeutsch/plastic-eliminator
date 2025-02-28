@@ -23,10 +23,103 @@
             return lastCompletedDate === today;
           });
           const [exportSuccess, setExportSuccess] = React.useState(false);
+          const [reminderSuccess, setReminderSuccess] = React.useState(false);
           const [currentDay, setCurrentDay] = React.useState(() => {
             const saved = localStorage.getItem('plasticEliminatorCurrentDay');
             return saved ? parseInt(saved) : 1;
           });
+          
+          // Request notification permission
+          const requestNotificationPermission = async () => {
+            // Check if the browser supports notifications
+            if (!("Notification" in window)) {
+              alert("This browser does not support desktop notifications");
+              return false;
+            }
+
+            // Check if permission is already granted
+            if (Notification.permission === "granted") {
+              return true;
+            }
+
+            // Otherwise, request permission
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+              return true;
+            } else {
+              alert("We need notification permission to send you reminders");
+              return false;
+            }
+          };
+
+          // Set up a daily reminder
+          const setupDailyReminder = async () => {
+            const hasPermission = await requestNotificationPermission();
+            if (!hasPermission) return;
+
+            // Store the user preference in localStorage
+            localStorage.setItem('plasticEliminatorReminder', 'true');
+            
+            // Show immediate confirmation
+            setReminderSuccess(true);
+            setTimeout(() => setReminderSuccess(false), 3000);
+            
+            // Set up a reminder for the next day
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(9, 0, 0, 0); // Set time to 9:00 AM
+            
+            const timeUntilTomorrow = tomorrow.getTime() - new Date().getTime();
+            
+            // Store the scheduled time in localStorage
+            localStorage.setItem('plasticEliminatorReminderTime', tomorrow.getTime().toString());
+            
+            // Schedule the notification
+            setTimeout(() => {
+              showReminderNotification();
+            }, timeUntilTomorrow);
+          };
+
+          // Show a notification
+          const showReminderNotification = () => {
+            if (Notification.permission === "granted") {
+              const notification = new Notification("Plastic Eliminator Reminder", {
+                body: "It's time to check today's plastic elimination challenge!",
+                icon: "https://via.placeholder.com/64", // Replace with your app icon
+              });
+              
+              // When user clicks on the notification, open the app
+              notification.onclick = function() {
+                window.focus();
+                notification.close();
+              };
+              
+              // Schedule the next day's reminder
+              setupDailyReminder();
+            }
+          };
+
+          // Check for reminders when the app loads
+          React.useEffect(() => {
+            const hasReminder = localStorage.getItem('plasticEliminatorReminder') === 'true';
+            const reminderTime = localStorage.getItem('plasticEliminatorReminderTime');
+            
+            if (hasReminder && reminderTime) {
+              const scheduledTime = parseInt(reminderTime);
+              const now = new Date().getTime();
+              
+              if (scheduledTime > now) {
+                // Reminder is in the future, set up the timer
+                const timeUntilReminder = scheduledTime - now;
+                setTimeout(() => {
+                  showReminderNotification();
+                }, timeUntilReminder);
+              } else {
+                // Reminder time has passed, schedule a new one for tomorrow
+                setupDailyReminder();
+              }
+            }
+          }, []);
           
           // 365 plastic reduction suggestions - distributed throughout the year to avoid repetition
         // 365 plastic reduction suggestions - distributed throughout the year to avoid repetition
@@ -701,6 +794,21 @@
                     </svg>
                     
                     {renderProgressStats()}
+                    
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={setupDailyReminder}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      >
+                        Remind Me Daily
+                      </button>
+                      
+                      {reminderSuccess && (
+                        <div className="mt-3 text-sm text-green-600">
+                          <p>✓ Daily reminder set! We'll notify you each day.</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="w-full">
@@ -725,6 +833,21 @@
                     </div>
                     
                     {renderProgressStats()}
+                    
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={setupDailyReminder}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      >
+                        Remind Me Daily
+                      </button>
+                      
+                      {reminderSuccess && (
+                        <div className="mt-3 text-sm text-green-600">
+                          <p>✓ Daily reminder set! We'll notify you each day.</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
