@@ -557,27 +557,54 @@
 
           // Check if date has changed and update if needed
           React.useEffect(() => {
-            const checkForNewDay = () => {
-              const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
-              const today = getLocalDate();
+          const checkForNewDay = () => {
+            const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
+            const today = getLocalDate();
+            
+            // Check if the date has changed since last check
+            const lastCheckedDate = localStorage.getItem('plasticEliminatorLastCheckedDate');
+            const dateHasChanged = lastCheckedDate && !isSameDay(lastCheckedDate, today);
+            
+            // Store today as the last checked date
+            localStorage.setItem('plasticEliminatorLastCheckedDate', today);
+            
+            // If the date has changed
+            if (dateHasChanged) {
+              // Get yesterday's suggestion
+              const prevDay = currentDay;
+              const index = (prevDay - 1) % fullYearSuggestions.length;
+              const yesterdaySuggestion = fullYearSuggestions[index];
               
-              // If we've completed a task before and it's a new day
-              if (lastCompletedDate && !isSameDay(lastCompletedDate, today)) {
-                // Advance to next day
-                setCurrentDay(prevDay => prevDay + 1);
-                // Reset completion status
-                setCompletedToday(false);
+              // Check if yesterday's suggestion was completed
+              if (!completedToday) {
+                // Add to targets if not completed
+                const newTargets = [...targets, {
+                  ...yesterdaySuggestion,
+                  date: lastCheckedDate // Use the previous date
+                }];
+                setTargets(newTargets);
               }
-            };
+              
+              // Advance to next day
+              setCurrentDay(prevDay => prevDay + 1);
+              // Reset completion status
+              setCompletedToday(false);
+            }
             
-            // Check on initial load
-            checkForNewDay();
-            
-            // Set up interval to check periodically
-            const interval = setInterval(checkForNewDay, 60000); // Check every minute
-            
-            return () => clearInterval(interval);
-          }, []);
+            // If we just need to check if we completed today's task
+            else if (lastCompletedDate) {
+              setCompletedToday(isSameDay(lastCompletedDate, today));
+            }
+          };
+          
+          // Check on initial load
+          checkForNewDay();
+          
+          // Set up interval to check periodically
+          const interval = setInterval(checkForNewDay, 60000); // Check every minute
+          
+          return () => clearInterval(interval);
+        }, [currentDay, completedToday, targets]);
 
           // Get today's suggestion
           const getTodaySuggestion = () => {
@@ -735,7 +762,7 @@
                 
                 {completedToday ? (
                   <div className="text-center">
-                  <p className="text-xl text-center mb-8">Great job! Come back tomorrow for day {currentDay + 1} of your plastic-free journey</p>
+                  <p className="text-xl text-center mb-8">Nice! Come back tomorrow for day {currentDay + 1} of your plastic-elimination journey</p>
                   <div className="flex justify-center items-center mb-8">
                     <svg className="text-green-500" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
