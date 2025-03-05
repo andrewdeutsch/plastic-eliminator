@@ -8,28 +8,6 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    
-    <!-- PWA Support -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Plastic Eliminator">
-    <link rel="apple-touch-icon" href="imgs/icon-192x192.png">
-    <meta name="theme-color" content="#e53e3e">
-    <style>
-        .transition-opacity {
-         transition: opacity 3s ease-out;
-        }
-        .duration-3000 {
-          transition-duration: 3000ms;
-         }
-        .opacity-0 {
-          opacity: 0;
-            }
-         .opacity-100 {
-          opacity: 1;
-        }
-    </style>
 </head>
 <body>
     <div id="root"></div>
@@ -37,343 +15,18 @@
     <script type="text/babel">
         // PlasticEliminatorApp component
         const PlasticEliminatorApp = () => {
-          // Basic states
+          // States for the interactive demo
           const [currentView, setCurrentView] = React.useState('home');
           const [completedToday, setCompletedToday] = React.useState(() => {
             const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
-            const today = new Date().toLocaleDateString();
+            const today = getISODate();
             return lastCompletedDate === today;
           });
           const [exportSuccess, setExportSuccess] = React.useState(false);
-          const [reminderSuccess, setReminderSuccess] = React.useState(false);
-          const [reminderActive, setReminderActive] = React.useState(() => {
-            return localStorage.getItem('plasticEliminatorReminder') === 'true';
-          });
           const [currentDay, setCurrentDay] = React.useState(() => {
             const saved = localStorage.getItem('plasticEliminatorCurrentDay');
             return saved ? parseInt(saved) : 1;
           });
-          
-          // Home screen installation states
-          const [deferredPrompt, setDeferredPrompt] = React.useState(null);
-          const [showInstallButton, setShowInstallButton] = React.useState(false);
-          const [showManualInstructions, setShowManualInstructions] = React.useState(false);
-          
-          // Listen for install prompt
-          React.useEffect(() => {
-            // Listen for the beforeinstallprompt event
-            window.addEventListener('beforeinstallprompt', (e) => {
-              // Prevent the mini-infobar from appearing on mobile
-              e.preventDefault();
-              // Store the event for later use
-              setDeferredPrompt(e);
-              // Show the install button
-              setShowInstallButton(true);
-            });
-
-            // Listen for app successful installation
-            window.addEventListener('appinstalled', () => {
-              // Log app installation
-              console.log('PWA was installed');
-              // Hide the install button
-              setShowInstallButton(false);
-              // Clear the deferredPrompt
-              setDeferredPrompt(null);
-            });
-          }, []);
-          
-          // Request notification permission
-            const initiateReminderSetup = () => {
-            // Check current permission status
-            if (Notification.permission === "granted") {
-                // Already have permission, proceed directly
-                setupDailyReminder();
-            } else if (Notification.permission === "denied") {
-                // Permission was previously denied
-                setPermissionBlocked(true);
-            } else {
-                // Show our custom dialog first
-                setShowPermissionDialog(true);
-            }
-            };
-
-
-            // This will be called when user confirms they want notifications
-            const proceedWithPermissionRequest = async () => {
-            setShowPermissionDialog(false);
-            
-            try {
-                const permission = await Notification.requestPermission();
-                console.log("Permission request result:", permission);
-                
-                if (permission === "granted") {
-                setupDailyReminder();
-                } else {
-                // Permission denied
-                setPermissionBlocked(true);
-                }
-            } catch (error) {
-                console.error("Error requesting permission:", error);
-                alert("There was an error requesting notification permission");
-            }
-            };
-
-
-
-            // This will set up the reminder after permission is granted
-            const setupDailyReminder = () => {
-            // Store the user preference in localStorage
-            localStorage.setItem('plasticEliminatorReminder', 'true');
-            
-            // Show immediate confirmation and update state
-            setReminderSuccess(true);
-            setReminderActive(true);
-            setFadeOut(false);
-            // Handle message fade out
-            console.log("Initial fadeOut state:", fadeOut);
-            setTimeout(() => {
-            setFadeOut(true);
-            console.log("Setting fadeOut to true");
-            }, 7000);
-            setTimeout(() => {
-                setReminderSuccess(false);
-                setFadeOut(false);
-            }, 10000);
-            
-            // Schedule the next notification
-            scheduleNextNotification();
-            };
-
-            // Schedule the next notification at 9:00 AM
-            const scheduleNextNotification = () => {
-            const now = new Date();
-            let targetTime = new Date();
-            
-            // Set time to 9:00 AM
-            targetTime.setHours(9, 0, 0, 0);
-            
-            // If it's already past 9:00 AM today, schedule for tomorrow
-            if (now >= targetTime) {
-                targetTime.setDate(targetTime.getDate() + 1);
-            }
-            
-            // Calculate time until target
-            const timeUntilTarget = targetTime.getTime() - now.getTime();
-                      
-            // Store target time in localStorage
-            localStorage.setItem('plasticEliminatorReminderTime', targetTime.getTime().toString());
-            
-            // Store the fact that reminders are now active
-            localStorage.setItem('plasticEliminatorReminder', 'true');
-            
-            // Update UI states
-            setReminderActive(true);
-            //setReminderSuccess(true); // Show the success message
-            // Show the status message
-            setShowReminderStatus(true);
-            // Set the timer
-            setTimeout(() => {
-                showReminderNotification();
-            }, timeUntilTarget);
-            };
-
-            // Add this useEffect to reset the success message when views change
-            React.useEffect(() => {
-            // Reset success message whenever view changes or on initial load
-            setShowReminderStatus(false);
-            }, [currentView]);
-
-            const [showPermissionDialog, setShowPermissionDialog] = React.useState(false);
-            const [permissionBlocked, setPermissionBlocked] = React.useState(false);
-
-          // Show notification and schedule next one
-            const showReminderNotification = () => {
-            console.log("Showing notification");
-            
-            try {
-                if (Notification.permission === "granted") {
-                const notification = new Notification("Plastic Eliminator Reminder", {
-                    body: "It's time to check today's plastic elimination challenge!",
-                    icon: "icon-192x192.png"
-                });
-                
-                notification.onclick = function() {
-                    window.focus();
-                    notification.close();
-                };
-                
-                // Schedule the next notification
-                scheduleNextNotification();
-                } else {
-                console.warn("Cannot show notification - permission not granted");
-                }
-            } catch (error) {
-                console.error("Error showing notification:", error);
-            }
-            };
-
-          // Check for existing reminders on app load
-            React.useEffect(() => {
-            const hasReminder = localStorage.getItem('plasticEliminatorReminder') === 'true';
-            const reminderTimeStr = localStorage.getItem('plasticEliminatorReminderTime');
-            
-            console.log("Checking for existing reminders:", { hasReminder, reminderTimeStr });
-            
-            if (hasReminder) {
-                setReminderActive(true);
-                
-                if (reminderTimeStr) {
-                const scheduledTime = parseInt(reminderTimeStr);
-                const now = new Date().getTime();
-                
-                if (!isNaN(scheduledTime) && scheduledTime > now) {
-                    // Valid future time - set up timer
-                    const timeUntilReminder = scheduledTime - now;
-                    
-                    console.log(`Found scheduled reminder at: ${new Date(scheduledTime).toLocaleString()}`);
-                    console.log(`Time until reminder: ${Math.round(timeUntilReminder / (1000 * 60))} minutes`);
-                    
-                    setTimeout(() => {
-                    showReminderNotification();
-                    }, timeUntilReminder);
-                } else {
-                    // Past or invalid time - schedule new one
-                    console.log("Reminder time is in the past or invalid, scheduling new reminder");
-                    setTimeout(() => {
-                    scheduleNextNotification();
-                    }, 1000);
-                }
-                } else {
-                // No time saved, but reminders are enabled - schedule new one
-                console.log("Reminders enabled but no time set, scheduling new reminder");
-                setTimeout(() => {
-                    scheduleNextNotification();
-                }, 1000);
-                }
-            }
-            }, []);
-            // Add this test button to your UI for debugging
-            // Just below the "Remind Me Daily" button in renderReminderSection
-            const testNotification = () => {
-            // Simple test notification
-            if (Notification.permission === "granted") {
-                new Notification("Test Notification", {
-                body: "This is a test notification from Plastic Eliminator"
-                });
-                console.log("Test notification sent");
-            } else {
-                console.warn("Cannot test - notification permission not granted");
-                alert("Notification permission is not granted. Current status: " + Notification.permission);
-            }
-            };
-
-
-            // Add this useEffect to detect fadeOut changes
-            React.useEffect(() => {
-            console.log("fadeOut changed to:", fadeOut);
-            // Force a re-render by doing nothing
-            }, [fadeOut]);
-            // Add this test button to your renderReminderSection
-            // At the end of renderReminderSection, before the closing </div>:
-            
-            {!reminderActive && (
-            <div>
-                <button
-                onClick={initiateReminderSetup}
-                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                Remind Me Daily
-                </button>
-                
-                {reminderSuccess && (
-                <div 
-                    className="mt-3 text-sm text-green-600"
-                    style={{ 
-                    transition: 'opacity 3s ease-out', 
-                    opacity: fadeOut ? 0 : 1 
-                    }}
-                >
-                    <p>✓ Daily reminder set! We'll notify you each day.</p>
-                </div>
-                )}
-                
-                {/* Permission explanation dialog */}
-                {showPermissionDialog && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-md">
-                    <h3 className="text-lg font-bold mb-2">Enable Daily Reminders</h3>
-                    <p className="mb-4">
-                        To receive daily reminders at 9:00 AM, we need your permission to send notifications. 
-                        Your browser will ask for this permission in the next step.
-                    </p>
-                    <div className="flex justify-end space-x-3">
-                        <button 
-                        onClick={() => setShowPermissionDialog(false)} 
-                        className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
-                        >
-                        Cancel
-                        </button>
-                        <button 
-                        onClick={proceedWithPermissionRequest}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                        >
-                        Allow Notifications
-                        </button>
-                    </div>
-                    </div>
-                </div>
-                )}
-                
-                {/* Permission blocked message */}
-                {permissionBlocked && (
-                <div className="mt-3 p-3 border border-yellow-400 bg-yellow-50 text-yellow-800 rounded text-sm">
-                    <p className="font-semibold">Notification permission denied</p>
-                    <p className="mt-1">
-                    You'll need to enable notifications in your browser settings to receive reminders.
-                    </p>
-                    <details className="mt-2">
-                    <summary className="cursor-pointer font-medium">How to enable notifications</summary>
-                    <div className="mt-2 pl-3 border-l-2 border-yellow-300">
-                        <p className="mb-1"><strong>Chrome:</strong> Click the lock icon in the address bar → Site settings → Allow notifications</p>
-                        <p className="mb-1"><strong>Firefox:</strong> Click the shield icon in the address bar → Site permissions → Allow notifications</p>
-                        <p><strong>Safari:</strong> Open Preferences → Websites → Notifications → Find this site and allow</p>
-                    </div>
-                    </details>
-                    <button 
-                    onClick={() => setPermissionBlocked(false)}
-                    className="mt-2 text-xs text-yellow-700 underline"
-                    >
-                    Dismiss
-                    </button>
-                </div>
-                )}
-            </div>
-            )}
-            
-                    
-          // Handle the installation
-          const handleInstallClick = async () => {
-            // If there's no deferred prompt, it means PWA is not available or already installed
-            if (!deferredPrompt) {
-              alert("This app is either already installed or your browser doesn't support home screen installation.");
-              return;
-            }
-
-            // Show the installation prompt
-            deferredPrompt.prompt();
-            
-            // Wait for the user to respond to the prompt
-            const { outcome } = await deferredPrompt.userChoice;
-            
-            // We've used the prompt, and can't use it again, so clear it
-            setDeferredPrompt(null);
-            
-            if (outcome === 'accepted') {
-              console.log('User accepted the install prompt');
-            } else {
-              console.log('User dismissed the install prompt');
-            }
-          };
           
           // 365 plastic reduction suggestions - distributed throughout the year to avoid repetition
         // 365 plastic reduction suggestions - distributed throughout the year to avoid repetition
@@ -850,6 +503,11 @@
         { id: 365, text: "Commit to continuing your plastic reduction journey", impact: "Ensures sustainable habits become permanent lifestyle", category: "Reflection" }
         ];
 
+          //keep date formatting consistent
+          function getISODate() {
+            return new Date().toISOString().split('T')[0]; // e.g. "2025-03-03"
+          }
+
           // Sample data for already eliminated plastics
           const [eliminatedPlastics, setEliminatedPlastics] = React.useState(() => {
             const saved = localStorage.getItem('plasticEliminatorCompleted');
@@ -873,7 +531,7 @@
           React.useEffect(() => {
             const checkForNewDay = () => {
               const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
-              const today = new Date().toLocaleDateString();
+              const today = getISODate();
               
               // If we've completed a task before and it's a new day
               if (lastCompletedDate && lastCompletedDate !== today) {
@@ -903,7 +561,7 @@
           // Mark today's suggestion as completed
           const markAsEliminated = () => {
             const todaySuggestion = getTodaySuggestion();
-            const today = new Date().toLocaleDateString();
+            const today = getISODate();
             
             // Add to eliminated list with date
             const newEliminated = [
@@ -924,7 +582,7 @@
             const targetItem = targets.find(item => item.id === targetId);
             if (targetItem) {
               // Add to eliminated list
-              const today = new Date().toLocaleDateString();
+              const today = getISODate();
               const newEliminated = [...eliminatedPlastics, {...targetItem, date: today}];
               setEliminatedPlastics(newEliminated);
               
@@ -1003,84 +661,6 @@
             );
           };
           
-          // Render install buttons
-          const renderInstallButton = () => {
-            if (!showInstallButton) return null;
-            
-            return (
-              <div className="mt-4">
-                <button
-                  onClick={handleInstallClick}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center justify-center"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                  Add to Home Screen
-                </button>
-              </div>
-            );
-          };
-
-          // Manual installation instructions
-          const renderManualInstallInstructions = () => {
-            // Only show these instructions if automatic installation isn't available
-            if (showInstallButton) return null;
-
-            return (
-              <div className="mt-4">
-                <button
-                  onClick={() => setShowManualInstructions(prevState => !prevState)}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  How to Install App
-                </button>
-                
-                {showManualInstructions && (
-                  <div className="mt-3 p-3 border border-gray-300 rounded-md bg-gray-50 text-sm">
-                    <h4 className="font-bold mb-2">Install on your device:</h4>
-                    <p className="mb-2"><strong>iOS (Safari):</strong> Tap the share icon, then "Add to Home Screen"</p>
-                    <p className="mb-2"><strong>Android (Chrome):</strong> Tap the menu, then "Add to Home Screen"</p>
-                    <p><strong>Desktop:</strong> Look for the install icon in your browser's address bar</p>
-                  </div>
-                )}
-              </div>
-            );
-          };
-          
-          // Render reminder section with install options - FIXED VERSION WITHOUT COMMENTS
-          // Add this state to track the fade animation
-          const [fadeOut, setFadeOut] = React.useState(false);
-          // Add this state to track if we should show the status message
-        const [showReminderStatus, setShowReminderStatus] = React.useState(false);  
-
-        
-          // Then in your renderReminderSection
-          const renderReminderSection = () => (
-            <div className="mt-6 text-center">
-                {/* Only show status message if showReminderStatus is true */}
-                {showReminderStatus && (
-                <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
-                    <p className="font-semibold">✓ Daily Reminder Active</p>
-                    <p className="text-sm">You'll receive a notification at 9:00 AM each day</p>
-                </div>
-                )}
-                
-                {/* Show button only if reminders are not active */}
-                {!reminderActive && (
-                <button
-                    onClick={setupDailyReminder}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                    Remind Me Daily
-                </button>
-                )}
-                
-                {renderInstallButton()}
-                {renderManualInstallInstructions()}
-            </div>
-            );
-          
           // Navigation bar
           const renderNavBar = () => (
             <div className="bg-white py-4 border-b border-gray-200">
@@ -1089,7 +669,7 @@
                   onClick={() => setCurrentView('home')}
                   className="text-2xl font-bold text-red-700 cursor-pointer hover:text-red-800 transition-colors"
                 >
-                  A Year of Less Plastic
+                  Plastic Eliminator
                 </h1>
                 <div className="flex space-x-6">
                   <button 
@@ -1126,7 +706,6 @@
                     </svg>
                     
                     {renderProgressStats()}
-                    {renderReminderSection()}
                   </div>
                 ) : (
                   <div className="w-full">
@@ -1151,7 +730,6 @@
                     </div>
                     
                     {renderProgressStats()}
-                    {renderReminderSection()}
                   </div>
                 )}
               </div>
@@ -1266,21 +844,6 @@
         // Render the app
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<PlasticEliminatorApp />);
-    </script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(error => {
-              console.log('ServiceWorker registration failed: ', error);
-            });
-        });
-      }
     </script>
 </body>
 </html>
