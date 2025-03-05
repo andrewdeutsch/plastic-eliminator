@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e53e3e">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="imgs/favicon.ico" sizes="any">
+    <link rel="icon" href="imgs/icon-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="imgs/icon-192x192.png">
     <title>Plastic Eliminator - 365 Days</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service worker registered'))
+            .catch(err => console.log('Service worker registration failed', err));
+        });
+      }
+    </script>
+    }
 </head>
 <body>
     <div id="root"></div>
@@ -19,7 +35,7 @@
           const [currentView, setCurrentView] = React.useState('home');
           const [completedToday, setCompletedToday] = React.useState(() => {
             const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
-            const today = getISODate();
+            const today = getLocalDate();
             return lastCompletedDate === today;
           });
           const [exportSuccess, setExportSuccess] = React.useState(false);
@@ -504,8 +520,20 @@
         ];
 
           //keep date formatting consistent
-          function getISODate() {
-            return new Date().toISOString().split('T')[0]; // e.g. "2025-03-03"
+          function getLocalDate() {
+            const now = new Date();
+            return now.getFullYear() + '-' + 
+                  String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                  String(now.getDate()).padStart(2, '0');
+          }
+
+          // date comparison
+          function isSameDay(date1, date2) {
+            const d1 = new Date(date1);
+            const d2 = new Date(date2);
+            return d1.getFullYear() === d2.getFullYear() &&
+                  d1.getMonth() === d2.getMonth() &&
+                  d1.getDate() === d2.getDate();
           }
 
           // Sample data for already eliminated plastics
@@ -531,10 +559,10 @@
           React.useEffect(() => {
             const checkForNewDay = () => {
               const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
-              const today = getISODate();
+              const today = getLocalDate();
               
               // If we've completed a task before and it's a new day
-              if (lastCompletedDate && lastCompletedDate !== today) {
+              if (lastCompletedDate && !isSameDay(lastCompletedDate, today)) {
                 // Advance to next day
                 setCurrentDay(prevDay => prevDay + 1);
                 // Reset completion status
@@ -561,7 +589,7 @@
           // Mark today's suggestion as completed
           const markAsEliminated = () => {
             const todaySuggestion = getTodaySuggestion();
-            const today = getISODate();
+            const today = getLocalDate();
             
             // Add to eliminated list with date
             const newEliminated = [
@@ -582,7 +610,7 @@
             const targetItem = targets.find(item => item.id === targetId);
             if (targetItem) {
               // Add to eliminated list
-              const today = getISODate();
+              const today = getLocalDate();
               const newEliminated = [...eliminatedPlastics, {...targetItem, date: today}];
               setEliminatedPlastics(newEliminated);
               
@@ -684,6 +712,12 @@
                   >
                     targets
                   </button>
+                  <button 
+                  onClick={() => setCurrentView('info')} 
+                  className={`text-${currentView === 'info' ? 'red-700' : 'gray-500'} ml-2 font-bold`}
+                >
+                  ?
+                </button>
                 </div>
               </div>
             </div>
@@ -699,14 +733,16 @@
                 
                 {completedToday ? (
                   <div className="text-center">
-                    <p className="text-xl text-center mb-8">Great job! Come back tomorrow for day {currentDay + 1} of your plastic-free journey</p>
-                    <svg className="mx-auto text-green-500" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <p className="text-xl text-center mb-8">Great job! Come back tomorrow for day {currentDay + 1} of your plastic-free journey</p>
+                  <div className="flex justify-center items-center mb-8">
+                    <svg className="text-green-500" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                       <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
-                    
-                    {renderProgressStats()}
                   </div>
+                  
+                  {renderProgressStats()}
+                </div>
                 ) : (
                   <div className="w-full">
                     <div className="text-center mb-6">
@@ -816,6 +852,41 @@
             </div>
           );
           
+          //Info view
+          const renderInfoView = () => (
+          <div className="px-4 py-8">
+            <h2 className="text-3xl font-bold text-red-700 text-center mb-8">LET'S USE LESS PLASTIC.</h2>
+            
+            <div className="prose mx-auto">
+              <p className="mb-4">
+                Reducing plastic consumption is crucial for our planet's health. Plastics take hundreds of years to decompose, while polluting everything.
+              </p>
+              <p className="mb-4">
+                Every piece of plastic ever created still exists in some form. By eliminating single-use plastics and choosing sustainable alternatives, we can significantly reduce waste, conserve resources, and decrease pollution.
+              </p>
+              <p className="mb-4">
+                Small daily changes, like those suggested in this app, collectively create a massive positive impact on our environment and future generations.
+              </p>
+              <p className="mb-4">
+                You might be wondering why we aren't using green or docile design elements. It is because ending plastic use is an emergency.
+                </p>
+              <p className="mb-4">
+                Now go get rid of that plastic. 🎯
+              </p>
+            </div>
+            
+            <div className="text-center mt-8">
+              <button
+                onClick={() => setCurrentView('home')}
+                className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              >
+                Back to Today's Challenge
+              </button>
+            </div>
+          </div>
+        );
+
+
           return (
             <div className="max-w-md mx-auto bg-white min-h-screen flex flex-col border border-gray-300 shadow-lg">
               {renderNavBar()}
@@ -824,6 +895,7 @@
                 {currentView === 'home' && renderHomeView()}
                 {currentView === 'eliminated' && renderEliminatedView()}
                 {currentView === 'targets' && renderTargetsView()}
+                {currentView === 'info' && renderInfoView()}
               </div>
               
               {currentView !== 'home' && (

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e53e3e">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="imgs/favicon.ico" sizes="any">
+    <link rel="icon" href="imgs/icon-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="imgs/icon-192x192.png">
+    <title>Plastic Eliminator - Suggestions List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide-react.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service worker registered'))
+            .catch(err => console.log('Service worker registration failed', err));
+        });
+      }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Import icons from Lucide
+        const { Search, Filter, Calendar, Info } = window.LucideReact;
+
+        // Main component
+        const PlasticReductionPage = () => {
+          const [suggestions, setSuggestions] = useState([]);
+          const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+          const [categories, setCategories] = useState(['All']);
+          const [selectedCategory, setSelectedCategory] = useState('All');
+          const [searchTerm, setSearchTerm] = useState('');
+          const [currentPage, setCurrentPage] = useState(1);
+          const [suggestionsPerPage] = useState(10);
+          const [selectedSuggestion, setSelectedSuggestion] = useState(null);
+          const [view, setView] = useState('grid'); // 'grid' or 'list'
+          const [loading, setLoading] = useState(true);
+          const [error, setError] = useState(null);
+
+          useEffect(() => {
+            // Get mock data
+            setTimeout(() => {
+              // This is where you'll populate your actual data from the suggestions list
+              const mockData = fullYearSuggestions;
+              
+              setSuggestions(mockData);
+              
+              // Extract unique categories
+              const uniqueCategories = ['All', ...new Set(mockData.map(item => item.category))];
+              setCategories(uniqueCategories);
+              
+              // Initialize filtered suggestions
+              setFilteredSuggestions(mockData);
+              setLoading(false);
+            }, 800); // Simulate network delay
+          }, []);
+
+          // Filter suggestions based on category and search term
+          useEffect(() => {
+            let filtered = suggestions;
+            
+            // Apply category filter
+            if (selectedCategory !== 'All') {
+              filtered = filtered.filter(item => item.category === selectedCategory);
+            }
+            
+            // Apply search filter
+            if (searchTerm) {
+              const term = searchTerm.toLowerCase();
+              filtered = filtered.filter(item => 
+                item.text.toLowerCase().includes(term) || 
+                item.impact.toLowerCase().includes(term) ||
+                item.category.toLowerCase().includes(term)
+              );
+            }
+            
+            setFilteredSuggestions(filtered);
+            setCurrentPage(1); // Reset to first page when filters change
+          }, [selectedCategory, searchTerm, suggestions]);
+
+          // Get current suggestions for pagination
+          const indexOfLastSuggestion = currentPage * suggestionsPerPage;
+          const indexOfFirstSuggestion = indexOfLastSuggestion - suggestionsPerPage;
+          const currentSuggestions = filteredSuggestions.slice(indexOfFirstSuggestion, indexOfLastSuggestion);
+
+          // Change page
+          const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+          // Handle category change
+          const handleCategoryChange = (category) => {
+            setSelectedCategory(category);
+          };
+
+          // Handle search input change
+          const handleSearchChange = (e) => {
+            setSearchTerm(e.target.value);
+          };
+
+          // Handle suggestion selection
+          const handleSuggestionClick = (suggestion) => {
+            setSelectedSuggestion(suggestion);
+          };
+
+          // Handle view toggle
+          const handleViewChange = (newView) => {
+            setView(newView);
+          };
+
+          return (
+            <div className="bg-white min-h-screen">
+              {/* Hero section */}
+              <div className="text-white py-16 px-4" style={{ backgroundColor: '#e53e3e' }}>
+                <div className="container mx-auto max-w-6xl">
+                  <h1 className="text-4xl font-bold mb-4">365 Days of Plastic Reduction</h1>
+                  <p className="text-xl mb-8">Simple daily actions to reduce your plastic footprint</p>
+                  
+                  {/* Search bar */}
+                  <div className="relative max-w-xl">
+                    <input
+                      type="text"
+                      placeholder="Search for suggestions..."
+                      className="w-full p-3 pl-10 pr-4 rounded-lg text-gray-800"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                    />
+                    <Search className="absolute left-3 top-3 text-gray-500" size={20} />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Main content */}
+              <div className="container mx-auto max-w-6xl px-4 py-8">
+                {loading ? (
+                  <div className="flex justify-center items-center py-16">
+                    <div className="text-center">
+                      <div className="w-16 h-16 border-4 rounded-full animate-spin mx-auto mb-4" style={{ borderTopColor: '#e53e3e' }}></div>
+                      <p className="text-gray-600">Loading suggestions...</p>
+                    </div>
+                  </div>
+                ) : error ? (
+                  <div className="bg-red-100 border border-red-200 text-red-800 p-4 rounded-lg text-center">
+                    {error}
+                  </div>
+                ) : (
+                  <div className="flex flex-col md:flex-row gap-6">
+                    {/* Sidebar with filters */}
+                    <div className="md:w-1/4">
+                      <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                        <div className="flex items-center gap-2 font-medium mb-4" style={{ color: '#e53e3e' }}>
+                          <Filter size={20} />
+                          <h2 className="text-lg">Categories</h2>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {categories.map(category => (
+                            <button
+                              key={category}
+                              onClick={() => handleCategoryChange(category)}
+                              className={`w-full text-left px-3 py-2 rounded-md transition ${
+                                selectedCategory === category
+                                  ? 'text-white'
+                                  : 'hover:bg-gray-200'
+                              }`}
+                              style={{ backgroundColor: selectedCategory === category ? '#e53e3e' : 'transparent' }}
+                            >
+                              {category}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* View toggle */}
+                      <div className="bg-gray-50 p-4 rounded-lg shadow-sm mt-4">
+                        <div className="flex items-center gap-2 font-medium mb-4" style={{ color: '#e53e3e' }}>
+                          <Calendar size={20} />
+                          <h2 className="text-lg">View</h2>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleViewChange('grid')}
+                            className={`flex-1 px-3 py-2 rounded-md transition ${
+                              view === 'grid' ? 'text-white' : 'bg-gray-200'
+                            }`}
+                            style={{ backgroundColor: view === 'grid' ? '#e53e3e' : '' }}
+                          >
+                            Grid
+                          </button>
+                          <button
+                            onClick={() => handleViewChange('list')}
+                            className={`flex-1 px-3 py-2 rounded-md transition ${
+                              view === 'list' ? 'text-white' : 'bg-gray-200'
+                            }`}
+                            style={{ backgroundColor: view === 'list' ? '#e53e3e' : '' }}
+                          >
+                            List
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Suggestions display */}
+                    <div className="md:w-3/4">
+                      {/* Results info */}
+                      <div className="flex justify-between items-center mb-6">
+                        <p className="text-gray-600">
+                          Showing {indexOfFirstSuggestion + 1}-
+                          {Math.min(indexOfLastSuggestion, filteredSuggestions.length)} of{' '}
+                          {filteredSuggestions.length} suggestions
+                        </p>
+                        
+                        {/* Selected suggestion display */}
+                        {selectedSuggestion && (
+                          <button
+                            onClick={() => setSelectedSuggestion(null)}
+                            className="hover:underline"
+                            style={{ color: '#e53e3e' }}
+                          >
+                            Close Details
+                          </button>
+                        )}
+                      </div>
+                      
+                      {/* Selected suggestion details */}
+                      {selectedSuggestion && (
+                        <div className="p-6 rounded-lg shadow-sm mb-6 border-l-4" 
+                             style={{ backgroundColor: 'rgba(229, 62, 62, 0.05)', borderLeftColor: '#e53e3e' }}>
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-white text-sm px-2 py-1 rounded-full" style={{ backgroundColor: '#e53e3e' }}>
+                                  Day {selectedSuggestion.id}
+                                </span>
+                                <span className="bg-gray-200 text-gray-800 text-sm px-2 py-1 rounded-full">
+                                  {selectedSuggestion.category}
+                                </span>
+                              </div>
+                              <h3 className="text-xl font-semibold text-gray-800 mb-2">{selectedSuggestion.text}</h3>
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <Info size={16} />
+                                <p>{selectedSuggestion.impact}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {filteredSuggestions.length === 0 ? (
+                        <div className="text-center py-8 bg-gray-50 rounded-lg">
+                          <p className="text-gray-600">No suggestions found matching your criteria.</p>
+                          <button 
+                            onClick={() => {
+                              setSearchTerm('');
+                              setSelectedCategory('All');
+                            }}
+                            className="mt-4 px-4 py-2 rounded-md text-white"
+                            style={{ backgroundColor: '#e53e3e' }}
+                          >
+                            Reset Filters
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          {/* Grid view */}
+                          {view === 'grid' && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                              {currentSuggestions.map(suggestion => (
+                                <div
+                                  key={suggestion.id}
+                                  onClick={() => handleSuggestionClick(suggestion)}
+                                  className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition hover:shadow-md cursor-pointer"
+                                >
+                                  <div className="p-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                      <span className="text-xs px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#e53e3e' }}>
+                                        Day {suggestion.id}
+                                      </span>
+                                      <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                                        {suggestion.category}
+                                      </span>
+                                    </div>
+                                    <h3 className="font-medium text-gray-800 mb-2 line-clamp-2">{suggestion.text}</h3>
+                                    <p className="text-sm text-gray-600 line-clamp-2">{suggestion.impact}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          
+                          {/* List view */}
+                          {view === 'list' && (
+                            <div className="space-y-3">
+                              {currentSuggestions.map(suggestion => (
+                                <div
+                                  key={suggestion.id}
+                                  onClick={() => handleSuggestionClick(suggestion)}
+                                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition"
+                                >
+                                  <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+                                    <div className="flex items-center gap-2 md:w-1/6">
+                                      <span className="text-xs px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#e53e3e' }}>
+                                        Day {suggestion.id}
+                                      </span>
+                                    </div>
+                                    <div className="md:w-3/6">
+                                      <h3 className="font-medium text-gray-800">{suggestion.text}</h3>
+                                    </div>
+                                    <div className="md:w-1/6">
+                                      <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                                        {suggestion.category}
+                                      </span>
+                                    </div>
+                                    <div className="md:w-1/6 text-sm text-gray-600">{suggestion.impact}</div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          
+                          {/* Pagination */}
+                          {filteredSuggestions.length > suggestionsPerPage && (
+                            <div className="mt-6 flex justify-center">
+                              <div className="flex flex-wrap gap-1 justify-center">
+                                {Array.from({ length: Math.ceil(filteredSuggestions.length / suggestionsPerPage) }).map((_, index) => (
+                                  <button
+                                    key={index}
+                                    onClick={() => paginate(index + 1)}
+                                    className={`px-3 py-1 rounded-md ${
+                                      currentPage === index + 1
+                                        ? 'text-white'
+                                        : 'bg-gray-200 hover:bg-gray-300'
+                                    }`}
+                                    style={{ backgroundColor: currentPage === index + 1 ? '#e53e3e' : '' }}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        // Replace this with your suggestions list
+        const fullYearSuggestions = [
+          { id: 1, text: "Use a reusable water bottle", impact: "Saves ~156 plastic bottles yearly", category: "Kitchen" },
+          { id: 2, text: "Bring reusable shopping bags", impact: "Eliminates ~300 plastic bags yearly", category: "Shopping" },
+          // You'll replace this with your full list from suggestions.js
+          // Paste all 365 suggestions here
+        ];
+
+        // Render the app
+        const { useState, useEffect } = React;
+        ReactDOM.render(<PlasticReductionPage />, document.getElementById('root'));
+    </script>
+</body>
+</html>

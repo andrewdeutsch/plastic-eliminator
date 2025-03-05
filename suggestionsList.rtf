@@ -1,0 +1,481 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs26 \cf0 // 365 plastic reduction suggestions - distributed throughout the year to avoid repetition\
+const fullYearSuggestions = [\
+  // Week 1 - Starting with basics from different categories\
+  \{ id: 1, text: "Use a reusable water bottle", impact: "Saves ~156 plastic bottles yearly", category: "Kitchen" \},\
+  \{ id: 2, text: "Bring reusable shopping bags", impact: "Eliminates ~300 plastic bags yearly", category: "Shopping" \},\
+  \{ id: 3, text: "Use bamboo toothbrush instead of plastic", impact: "Prevents 4 plastic toothbrushes from landfills yearly", category: "Bathroom" \},\
+  \{ id: 4, text: "Try refillable pens", impact: "Prevents 10+ disposable pens from landfills yearly", category: "Office" \},\
+  \{ id: 5, text: "Pack a zero-waste travel kit", impact: "Reduces reliance on single-use plastics while traveling", category: "Travel" \},\
+  \{ id: 6, text: "Use wooden or bamboo cooking utensils", impact: "Prevents microplastics from entering food", category: "Kitchen" \},\
+  \{ id: 7, text: "Do a plastic audit of your home", impact: "Identifies areas for improvement", category: "Reflection" \},\
+  \
+  // Week 2\
+  \{ id: 8, text: "Skip plastic straws", impact: "Prevents ~500 straws from landfills yearly", category: "Food" \},\
+  \{ id: 9, text: "Try plastic-free dental floss", impact: "Eliminates plastic packaging and non-biodegradable floss", category: "Bathroom" \},\
+  \{ id: 10, text: "Use compostable party supplies", impact: "Paper plates and wooden utensils reduce plastic waste", category: "Occasions" \},\
+  \{ id: 11, text: "Choose wooden pencils over plastic mechanical ones", impact: "Biodegradable and less plastic waste", category: "Office" \},\
+  \{ id: 12, text: "Use metal or wooden garden tools", impact: "More durable than plastic versions", category: "Garden" \},\
+  \{ id: 13, text: "Talk to a local restaurant about plastic alternatives", impact: "Encourages business change that affects many customers", category: "Advocacy" \},\
+  \{ id: 14, text: "Use rechargeable batteries", impact: "Prevents 100s of disposable batteries and packaging", category: "Technology" \},\
+  \
+  // Week 3\
+  \{ id: 15, text: "Use reusable food containers instead of plastic wrap", impact: "Reduces plastic film waste by ~100 sq ft yearly", category: "Kitchen" \},\
+  \{ id: 16, text: "Buy loose produce without plastic bags", impact: "Saves ~150 produce bags yearly", category: "Shopping" \},\
+  \{ id: 17, text: "Switch to safety razor", impact: "Prevents 12-24 disposable razors from landfills yearly", category: "Bathroom" \},\
+  \{ id: 18, text: "Try plastic-free tape", impact: "Paper or cellulose tape is recyclable/compostable", category: "Office" \},\
+  \{ id: 19, text: "Bring your own travel containers for toiletries", impact: "Eliminates need for mini plastic bottles", category: "Travel" \},\
+  \{ id: 20, text: "Use fabric gift bags", impact: "Reusable alternative to wrapping paper and tape", category: "Occasions" \},\
+  \{ id: 21, text: "Calculate your plastic footprint", impact: "Establishes baseline for measuring progress", category: "Reflection" \},\
+  \
+  // Week 4\
+  \{ id: 22, text: "Switch to bar soap instead of bottled", impact: "Eliminates 6+ plastic bottles yearly", category: "Bathroom" \},\
+  \{ id: 23, text: "Bring your own coffee cup", impact: "Prevents ~365 disposable cups yearly", category: "Food" \},\
+  \{ id: 24, text: "Choose plastic-free cleaning brushes", impact: "More durable and biodegradable at end of life", category: "Home" \},\
+  \{ id: 25, text: "Use paper file folders instead of plastic", impact: "Recyclable and biodegradable", category: "Office" \},\
+  \{ id: 26, text: "Try compostable seed starters", impact: "Paper or coconut coir pots break down in soil", category: "Garden" \},\
+  \{ id: 27, text: "Join a beach or park cleanup", impact: "Prevents plastic from entering waterways", category: "Advocacy" \},\
+  \{ id: 28, text: "Choose refurbished electronics", impact: "Extends product life and reduces packaging", category: "Technology" \},\
+  \
+  // Week 5\
+  \{ id: 29, text: "Buy milk in glass bottles if available", impact: "Reduces up to 52 plastic bottles yearly", category: "Kitchen" \},\
+  \{ id: 30, text: "Choose products in paper or cardboard packaging", impact: "Higher recycling rates than plastic", category: "Shopping" \},\
+  \{ id: 31, text: "Use plastic-free sunscreen in metal tins", impact: "Eliminates 2-5 plastic bottles yearly", category: "Bathroom" \},\
+  \{ id: 32, text: "Choose metal staplers", impact: "Longer lasting than plastic versions", category: "Office" \},\
+  \{ id: 33, text: "Try plastic-free sunglasses", impact: "Wooden or bamboo frames are biodegradable", category: "Personal" \},\
+  \{ id: 34, text: "Try beeswax or soy candles instead of paraffin", impact: "Often come in glass jars or metal tins instead of plastic", category: "Occasions" \},\
+  \{ id: 35, text: "Start a plastic-free journal", impact: "Tracks progress and identifies challenges", category: "Reflection" \},\
+  \
+  // Week 6\
+  \{ id: 36, text: "Use beeswax wraps instead of plastic wrap", impact: "Eliminates ~100 sq ft of plastic wrap yearly", category: "Kitchen" \},\
+  \{ id: 37, text: "Buy clothing made from natural fibers", impact: "Synthetic fabrics release microplastics when washed", category: "Shopping" \},\
+  \{ id: 38, text: "Switch to plastic-free lotion bars", impact: "Saves 3-6 plastic bottles yearly", category: "Bathroom" \},\
+  \{ id: 39, text: "Try wooden or metal pencil holders", impact: "More durable than plastic versions", category: "Office" \},\
+  \{ id: 40, text: "Use natural twine for garden ties", impact: "Biodegradable alternative to plastic ties", category: "Garden" \},\
+  \{ id: 41, text: "Start a plastic-free challenge at work", impact: "Amplifies your impact through collective action", category: "Advocacy" \},\
+  \{ id: 42, text: "Try plastic-free phone cases", impact: "Bamboo, wood or biodegradable options reduce waste", category: "Technology" \},\
+  \
+  // Week 7\
+  \{ id: 43, text: "Choose cardboard packaging over plastic when possible", impact: "Reduces plastic waste by ~10%", category: "Shopping" \},\
+  \{ id: 44, text: "Try plastic-free deodorant", impact: "Eliminates 3-4 plastic containers yearly", category: "Bathroom" \},\
+  \{ id: 45, text: "Switch to concentrated cleaning products", impact: "Reduces plastic packaging by up to 80%", category: "Home" \},\
+  \{ id: 46, text: "Use natural rubber erasers", impact: "Plastic-free and biodegradable", category: "Office" \},\
+  \{ id: 47, text: "Use a metal or bamboo travel cutlery set", impact: "Eliminates disposable plastic utensils", category: "Travel" \},\
+  \{ id: 48, text: "Use dried flowers or living plants as decorations", impact: "Biodegradable alternative to plastic decorations", category: "Occasions" \},\
+  \{ id: 49, text: "Set plastic reduction goals for next year", impact: "Continues momentum beyond one year", category: "Reflection" \},\
+  \
+  // Week 8\
+  \{ id: 50, text: "Switch to plastic-free dish washing brushes", impact: "Eliminates 4-6 plastic sponges yearly", category: "Kitchen" \},\
+  \{ id: 51, text: "Try plastic-free gift wrapping", impact: "Fabric wraps or paper without tape reduces waste", category: "Shopping" \},\
+  \{ id: 52, text: "Use menstrual cups or reusable pads", impact: "Prevents 240+ disposable products yearly", category: "Bathroom" \},\
+  \{ id: 53, text: "Choose cardboard binders where possible", impact: "Recyclable alternative to plastic binders", category: "Office" \},\
+  \{ id: 54, text: "Try terracotta or wooden plant pots", impact: "More sustainable than plastic pots", category: "Garden" \},\
+  \{ id: 55, text: "Email companies about excessive packaging", impact: "Consumer pressure drives corporate change", category: "Advocacy" \},\
+  \{ id: 56, text: "Use wooden or metal speakers", impact: "More durable than plastic versions", category: "Technology" \},\
+  \
+  // Week 9\
+  \{ id: 57, text: "Buy rice, pasta, and grains in bulk", impact: "Reduces packaging waste by ~30%", category: "Shopping" \},\
+  \{ id: 58, text: "Switch to bamboo cotton swabs", impact: "Eliminates 300+ plastic stems yearly", category: "Bathroom" \},\
+  \{ id: 59, text: "Use wool dryer balls instead of dryer sheets", impact: "Eliminates single-use dryer sheet waste", category: "Home" \},\
+  \{ id: 60, text: "Try plastic-free highlighters", impact: "Wooden highlighter pencils eliminate plastic waste", category: "Office" \},\
+  \{ id: 61, text: "Try a plastic-free toothbrush case", impact: "Bamboo or metal options are more sustainable", category: "Travel" \},\
+  \{ id: 62, text: "Try plastic-free party favors", impact: "Paper, wood, or edible options reduce waste", category: "Occasions" \},\
+  \{ id: 63, text: "Share your plastic reduction journey", impact: "Inspires others to make changes", category: "Reflection" \},\
+  \
+  // Week 10\
+  \{ id: 64, text: "Use a refillable spice container", impact: "Eliminates 5-10 plastic spice jars yearly", category: "Kitchen" \},\
+  \{ id: 65, text: "Choose digital subscriptions over physical copies", impact: "Eliminates plastic packaging and shipping materials", category: "Shopping" \},\
+  \{ id: 66, text: "Use wooden hairbrushes and combs", impact: "Longer lasting and biodegradable", category: "Bathroom" \},\
+  \{ id: 67, text: "Use metal paper clips", impact: "Removes plastic coating, fully recyclable", category: "Office" \},\
+  \{ id: 68, text: "Use a metal watering can", impact: "More durable than plastic versions", category: "Garden" \},\
+  \{ id: 69, text: "Share plastic-free tips on social media", impact: "Spreads awareness to your network", category: "Advocacy" \},\
+  \{ id: 70, text: "Try plastic-free earbuds", impact: "Wood and metal options reduce plastic waste", category: "Technology" \},\
+  \
+  // Week 11\
+  \{ id: 71, text: "Make your own salad dressing", impact: "Saves 12-24 plastic bottles yearly", category: "Kitchen" \},\
+  \{ id: 72, text: "Buy secondhand when possible", impact: "Extends product life and reduces packaging waste", category: "Shopping" \},\
+  \{ id: 73, text: "Try toothpaste tablets or powder", impact: "Eliminates 4-6 plastic tubes yearly", category: "Bathroom" \},\
+  \{ id: 74, text: "Choose plastic-free scissors", impact: "All-metal scissors last decades", category: "Office" \},\
+  \{ id: 75, text: "Try natural fiber cleaning cloths", impact: "Replaces disposable, synthetic wipes", category: "Home" \},\
+  \{ id: 76, text: "Use a stainless steel or glass travel mug", impact: "Eliminates disposable cups and plastic lids", category: "Travel" \},\
+  \{ id: 77, text: "Reflect on biggest plastic reduction wins", impact: "Recognizes successes and builds motivation", category: "Reflection" \},\
+  \
+  // Week 12\
+  \{ id: 78, text: "Choose glass jars for condiments", impact: "Eliminates 5-10 plastic containers yearly", category: "Kitchen" \},\
+  \{ id: 79, text: "Try plastic-free toys", impact: "Wooden toys are more durable and biodegradable", category: "Shopping" \},\
+  \{ id: 80, text: "Carry a reusable handkerchief", impact: "Eliminates need for plastic-wrapped tissues", category: "Personal" \},\
+  \{ id: 81, text: "Try plastic-free rulers", impact: "Wooden or metal options are more durable", category: "Office" \},\
+  \{ id: 82, text: "Try wooden or bamboo plant markers", impact: "Biodegradable alternative to plastic markers", category: "Garden" \},\
+  \{ id: 83, text: "Support plastic bag bans in your community", impact: "Policy changes create widespread impact", category: "Advocacy" \},\
+  \{ id: 84, text: "Use fabric-covered charging cables", impact: "More durable than plastic-only cables", category: "Technology" \},\
+  \
+  // Week 13\
+  \{ id: 85, text: "Store leftovers in glass containers", impact: "Reduces plastic container usage by ~75%", category: "Kitchen" \},\
+  \{ id: 86, text: "Choose glass or metal water filters", impact: "Reduces plastic filter cartridge waste", category: "Kitchen" \},\
+  \{ id: 87, text: "Try plastic-free band-aids", impact: "Many conventional bandages contain plastic", category: "Bathroom" \},\
+  \{ id: 88, text: "Use reusable lunch containers", impact: "Eliminates disposable plastic packaging", category: "Food" \},\
+  \{ id: 89, text: "Try plastic-free pet toys", impact: "Reduces plastic waste and safer for pets", category: "Home" \},\
+  \{ id: 90, text: "Use cloth napkins for special occasions", impact: "Eliminates paper napkins with plastic packaging", category: "Occasions" \},\
+  \{ id: 91, text: "Identify remaining plastic challenges", impact: "Focuses efforts on hardest areas", category: "Reflection" \},\
+  \
+  // Continue with this pattern for all 365 days\
+  // Week 14\
+  \{ id: 92, text: "Use silicone baking mats instead of parchment paper", impact: "Eliminates packaging waste and reduces consumption", category: "Kitchen" \},\
+  \{ id: 93, text: "Buy products in concentrated form", impact: "Smaller packaging reduces plastic use by 50-70%", category: "Shopping" \},\
+  \{ id: 94, text: "Switch to bamboo toilet paper without plastic packaging", impact: "Eliminates 12+ plastic wrappers yearly", category: "Bathroom" \},\
+  \{ id: 95, text: "Choose glass or metal water bottles at work", impact: "Prevents daily plastic bottle waste", category: "Office" \},\
+  \{ id: 96, text: "Use a plastic-free garden hose", impact: "Natural rubber hoses are more durable", category: "Garden" \},\
+  \{ id: 97, text: "Organize a plastic-free event", impact: "Demonstrates alternatives to others", category: "Advocacy" \},\
+  \{ id: 98, text: "Try digital subscriptions instead of physical media", impact: "Eliminates discs and packaging", category: "Technology" \},\
+  \
+  // Week 15\
+  \{ id: 99, text: "Bring reusable utensils when eating out", impact: "Prevents 100+ plastic utensils yearly", category: "Food" \},\
+  \{ id: 100, text: "Try plastic-free packing materials", impact: "Paper, cornstarch peanuts are biodegradable", category: "Shopping" \},\
+  \{ id: 101, text: "Use a plastic-free shower curtain", impact: "PVC curtains release microplastics and harmful chemicals", category: "Bathroom" \},\
+  \{ id: 102, text: "Try plastic-free sticky notes", impact: "Paper-only versions are recyclable", category: "Office" \},\
+  \{ id: 103, text: "Try coconut coir instead of peat moss", impact: "Often comes in biodegradable packaging", category: "Garden" \},\
+  \{ id: 104, text: "Talk to your child's school about reducing plastic", impact: "Educational institutions have significant purchasing power", category: "Advocacy" \},\
+  \{ id: 105, text: "Use a wooden or bamboo monitor stand", impact: "Sustainable alternative to plastic stands", category: "Technology" \},\
+  \
+  // Week 16\
+  \{ id: 106, text: "Make your own frozen treats instead of buying packaged ones", impact: "Saves 50+ plastic wrappers yearly", category: "Kitchen" \},\
+  \{ id: 107, text: "Choose rechargeable batteries for home use", impact: "Reduces battery packaging and hazardous waste", category: "Shopping" \},\
+  \{ id: 108, text: "Try natural sea sponges instead of synthetic", impact: "Biodegradable and longer lasting", category: "Bathroom" \},\
+  \{ id: 109, text: "Use refillable whiteboard markers", impact: "Reduces plastic marker waste by 80%", category: "Office" \},\
+  \{ id: 110, text: "Use a stainless steel compost bin", impact: "More durable than plastic versions", category: "Garden" \},\
+  \{ id: 111, text: "Start a plastic-free initiative in your neighborhood", impact: "Creates community support for sustainable habits", category: "Advocacy" \},\
+  \{ id: 112, text: "Try natural fiber laptop sleeves", impact: "Cotton or hemp alternatives to nylon", category: "Technology" \},\
+  \
+  // Week 17\
+  \{ id: 113, text: "Choose beverages in aluminum cans instead of plastic", impact: "Aluminum has a higher recycling rate (75% vs 30%)", category: "Shopping" \},\
+  \{ id: 114, text: "Make DIY face masks", impact: "Eliminates single-use sheet mask waste", category: "Bathroom" \},\
+  \{ id: 115, text: "Use a reusable lint roller", impact: "Eliminates disposable plastic rollers", category: "Home" \},\
+  \{ id: 116, text: "Choose bamboo business card holders", impact: "Biodegradable alternative to plastic", category: "Office" \},\
+  \{ id: 117, text: "Try natural pest control methods", impact: "Eliminates plastic bottles of chemicals", category: "Garden" \},\
+  \{ id: 118, text: "Support businesses using plastic alternatives", impact: "Encourages market shifts through purchasing power", category: "Advocacy" \},\
+  \{ id: 119, text: "Use wooden or metal keyboard and mouse", impact: "More sustainable than all-plastic peripherals", category: "Technology" \},\
+  \
+  // Week 18\
+  \{ id: 120, text: "Buy bread from a local bakery using your own bag", impact: "Eliminates 52+ plastic bread bags yearly", category: "Shopping" \},\
+  \{ id: 121, text: "Use alum crystal as natural deodorant", impact: "One stone lasts years vs. multiple plastic containers", category: "Bathroom" \},\
+  \{ id: 122, text: "Invest in plastic-free kitchen appliances", impact: "Metal and glass components last longer and don't leach chemicals", category: "Kitchen" \},\
+  \{ id: 123, text: "Try plastic-free laptop or tablet cases", impact: "Cork, fabric or leather options are more sustainable", category: "Technology" \},\
+  \{ id: 124, text: "Use wooden seed boxes for storage", impact: "More durable than plastic containers", category: "Garden" \},\
+  \{ id: 125, text: "Share plastic-free successes with friends", impact: "Peer influence is powerful for behavioral change", category: "Advocacy" \},\
+  \{ id: 126, text: "Calculate money saved by reducing plastic", impact: "Reinforces economic benefits of sustainable choices", category: "Reflection" \},\
+\
+  // Week 19\
+  \{ id: 127, text: "Use a plastic-free dish soap bar", impact: "Saves 6-12 plastic bottles yearly", category: "Kitchen" \},\
+  \{ id: 128, text: "Buy foods like chocolate and coffee in foil", impact: "Aluminum has higher recycling rates than plastic", category: "Shopping" \},\
+  \{ id: 129, text: "Try plastic-free hair gel or make your own", impact: "Saves 3-6 plastic bottles yearly", category: "Bathroom" \},\
+  \{ id: 130, text: "Use cloth laptop sleeves", impact: "Protects without plastic and lasts longer", category: "Technology" \},\
+  \{ id: 131, text: "Choose natural fiber rugs", impact: "Synthetic rugs shed microplastics when cleaned", category: "Home" \},\
+  \{ id: 132, text: "Try plastic-free bird feeders", impact: "Metal, ceramic, or wooden options last longer", category: "Garden" \},\
+  \{ id: 133, text: "Join an environmental organization", impact: "Collective advocacy creates systemic change", category: "Advocacy" \},\
+  \
+  // Week 20\
+  \{ id: 134, text: "Make your own yogurt", impact: "Saves 52+ plastic containers yearly", category: "Kitchen" \},\
+  \{ id: 135, text: "Try plastic-free kitchen gadgets", impact: "Metal and wood options last longer", category: "Kitchen" \},\
+  \{ id: 136, text: "Switch to solid perfumes in metal tins", impact: "Eliminates glass/plastic bottles and packaging", category: "Bathroom" \},\
+  \{ id: 137, text: "Try plastic-free phone stands", impact: "Wooden or metal options are more sustainable", category: "Technology" \},\
+  \{ id: 138, text: "Use refillable cleaning spray bottles", impact: "Reduces single-use plastic spray bottles", category: "Home" \},\
+  \{ id: 139, text: "Use paper seed packets", impact: "Recyclable or compostable", category: "Garden" \},\
+  \{ id: 140, text: "Ask for no plastic when ordering takeout", impact: "Reduces waste and signals customer preferences", category: "Advocacy" \},\
+  \
+  // Week 21\
+  \{ id: 141, text: "Choose ice cream in paper containers", impact: "Eliminates non-recyclable plastic packaging", category: "Shopping" \},\
+  \{ id: 142, text: "Use refillable facial cleansers", impact: "Reduces plastic bottle waste by 70-90%", category: "Bathroom" \},\
+  \{ id: 143, text: "Use reusable coffee filters at the office", impact: "Eliminates daily paper filter waste with plastic packaging", category: "Office" \},\
+  \{ id: 144, text: "Try bamboo charging stations", impact: "Sustainable alternative to plastic organizers", category: "Technology" \},\
+  \{ id: 145, text: "Try baking soda and vinegar for cleaning", impact: "Eliminates multiple plastic cleaning product bottles", category: "Home" \},\
+  \{ id: 146, text: "Try metal landscape edging", impact: "More durable than plastic versions", category: "Garden" \},\
+  \{ id: 147, text: "Research new plastic alternatives", impact: "Keeps up with innovations in sustainable products", category: "Reflection" \},\
+  \
+  // Week 22\
+  \{ id: 148, text: "Use cloth napkins instead of paper", impact: "Reduces packaging waste", category: "Kitchen" \},\
+  \{ id: 149, text: "Choose plastic-free greeting cards", impact: "Many cards have plastic coatings or decorations", category: "Shopping" \},\
+  \{ id: 150, text: "Try plastic-free nail care tools", impact: "Wooden or metal options are more durable and sustainable", category: "Bathroom" \},\
+  \{ id: 151, text: "Choose metal or glass reusable straws for office kitchen", impact: "Reduces plastic straw waste", category: "Office" \},\
+  \{ id: 152, text: "Use plastic-free tablet stands", impact: "Wood or metal options are more durable", category: "Technology" \},\
+  \{ id: 153, text: "Use washable mop pads", impact: "Eliminates disposable plastic-based mop pads", category: "Home" \},\
+  \{ id: 154, text: "Use a wooden compost turning tool", impact: "More sustainable than plastic versions", category: "Garden" \},\
+  \
+  // Week 23\
+  \{ id: 155, text: "Make coffee with a French press or metal filter", impact: "Eliminates single-use filters and plastic pods", category: "Kitchen" \},\
+  \{ id: 156, text: "Buy pasta in cardboard boxes not plastic", impact: "Cardboard is more widely recycled", category: "Shopping" \},\
+  \{ id: 157, text: "Opt out of plastic utensils when ordering takeout", impact: "Prevents 50+ plastic utensils yearly", category: "Food" \},\
+  \{ id: 158, text: "Try plastic-free desk organizers", impact: "Wooden or metal options last longer", category: "Office" \},\
+  \{ id: 159, text: "Try fabric cable organizers", impact: "Eliminates plastic cable management systems", category: "Technology" \},\
+  \{ id: 160, text: "Choose wooden or metal clothes hangers", impact: "Plastic hangers break easily and aren't recyclable", category: "Home" \},\
+  \{ id: 161, text: "Try glass or ceramic bird baths", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 24\
+  \{ id: 162, text: "Use metal tea strainers instead of tea bags", impact: "Many tea bags contain plastic and come in plastic packaging", category: "Kitchen" \},\
+  \{ id: 163, text: "Try plastic-free lunch bags", impact: "Cloth or waxed canvas options are washable", category: "Shopping" \},\
+  \{ id: 164, text: "Use plastic-free hair ties", impact: "Reduces non-biodegradable waste", category: "Bathroom" \},\
+  \{ id: 165, text: "Use metal or wooden coat hangers at work", impact: "More durable than plastic hangers", category: "Office" \},\
+  \{ id: 166, text: "Use solar-powered chargers", impact: "Extends life of devices reducing e-waste", category: "Technology" \},\
+  \{ id: 167, text: "Try plastic-free plant pots", impact: "Terracotta, ceramic, or fabric options are environmentally friendly", category: "Home" \},\
+  \{ id: 168, text: "Use metal garden stakes", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 25\
+  \{ id: 169, text: "Choose wooden cutting boards over plastic", impact: "Prevents microplastics from entering food", category: "Kitchen" \},\
+  \{ id: 170, text: "Choose paper egg cartons", impact: "More recyclable than styrofoam or plastic", category: "Shopping" \},\
+  \{ id: 171, text: "Try plastic-free lip balm in metal tins", impact: "Eliminates 3-5 plastic tubes yearly", category: "Bathroom" \},\
+  \{ id: 172, text: "Choose bamboo or wooden name plates", impact: "Biodegradable alternative to plastic", category: "Office" \},\
+  \{ id: 173, text: "Try bamboo or wooden headphone stands", impact: "Sustainable alternative to plastic stands", category: "Technology" \},\
+  \{ id: 174, text: "Use natural air fresheners", impact: "Eliminates plastic air freshener devices and refills", category: "Home" \},\
+  \{ id: 175, text: "Try natural fiber garden netting", impact: "Biodegradable alternative to plastic netting", category: "Garden" \},\
+  \
+  // Week 26\
+  \{ id: 176, text: "Use shampoo bars instead of bottled shampoo", impact: "Saves 6-12 plastic bottles yearly", category: "Bathroom" \},\
+  \{ id: 177, text: "Buy spices in glass jars", impact: "Refillable and reduces plastic waste", category: "Shopping" \},\
+  \{ id: 178, text: "Cook one more meal at home this week", impact: "Reduces takeout container waste", category: "Kitchen" \},\
+  \{ id: 179, text: "Try plastic-free calendars and planners", impact: "Paper-only versions can be recycled", category: "Office" \},\
+  \{ id: 180, text: "Use repairable electronics", impact: "Extends product life reducing waste", category: "Technology" \},\
+  \{ id: 181, text: "Try plastic-free pet food storage", impact: "Glass or metal containers reduce plastic bag waste", category: "Home" \},\
+  \{ id: 182, text: "Use wooden raised bed corners", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Continue pattern for rest of year...\
+  // Week 27\
+  \{ id: 183, text: "Try plastic-free shipping options", impact: "Request minimal or plastic-free packaging", category: "Shopping" \},\
+  \{ id: 184, text: "Use refillable makeup products", impact: "Reduces packaging waste by 30-50%", category: "Bathroom" \},\
+  \{ id: 185, text: "Switch to bamboo dish racks", impact: "Longer lasting and biodegradable", category: "Kitchen" \},\
+  \{ id: 186, text: "Use metal bookends", impact: "More durable than plastic versions", category: "Office" \},\
+  \{ id: 187, text: "Try natural fiber cases for tablets", impact: "Hemp, cotton or wool instead of synthetic materials", category: "Technology" \},\
+  \{ id: 188, text: "Use refillable lighters or matches", impact: "Prevents disposable plastic lighters from landfills", category: "Home" \},\
+  \{ id: 189, text: "Try coconut coir mats for weed suppression", impact: "Biodegradable alternative to plastic weed barrier", category: "Garden" \},\
+  \
+  // Week 28\
+  \{ id: 190, text: "Make your own nut milks", impact: "Eliminates tetrapak or plastic containers", category: "Kitchen" \},\
+  \{ id: 191, text: "Choose glass food storage for freezing", impact: "Eliminates plastic freezer bags and containers", category: "Kitchen" \},\
+  \{ id: 192, text: "Try bamboo or paper straws for parties", impact: "Biodegradable alternative to plastic straws", category: "Occasions" \},\
+  \{ id: 193, text: "Choose bamboo or wooden monitor stands", impact: "Sustainable alternative to plastic stands", category: "Office" \},\
+  \{ id: 194, text: "Use wooden or metal remote holders", impact: "More sustainable than plastic organizers", category: "Technology" \},\
+  \{ id: 195, text: "Choose non-synthetic bedding", impact: "Natural fibers don't shed microplastics in the wash", category: "Home" \},\
+  \{ id: 196, text: "Use metal or wooden cold frames", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 29\
+  \{ id: 197, text: "Buy toilet paper wrapped in paper", impact: "Eliminates plastic packaging", category: "Shopping" \},\
+  \{ id: 198, text: "Try plastic-free laundry detergent strips", impact: "Saves 30+ plastic jugs yearly", category: "Home" \},\
+  \{ id: 199, text: "Use wooden or bamboo cooking tools", impact: "Sustainable alternative to plastic utensils", category: "Kitchen" \},\
+  \{ id: 200, text: "Try plastic-free mouse pads", impact: "Natural rubber or cloth options are more sustainable", category: "Office" \},\
+  \{ id: 201, text: "Try reusable cable ties", impact: "Silicone or fabric options instead of zip ties", category: "Technology" \},\
+  \{ id: 202, text: "Write to elected officials about plastic pollution", impact: "Influences policy decisions", category: "Advocacy" \},\
+  \{ id: 203, text: "Try glass cloches for protecting seedlings", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 30\
+  \{ id: 204, text: "Try metal or glass spray bottles", impact: "More durable than plastic versions", category: "Home" \},\
+  \{ id: 205, text: "Shop at bulk food stores with your own containers", impact: "Eliminates packaging waste entirely", category: "Shopping" \},\
+  \{ id: 206, text: "Freeze foods in glass containers", impact: "Eliminates plastic freezer bags and containers", category: "Kitchen" \},\
+  \{ id: 207, text: "Try plastic-free luggage and bags", impact: "Canvas, leather options last longer", category: "Travel" \},\
+  \{ id: 208, text: "Use metal cooling stands for laptops", impact: "More durable than plastic versions", category: "Technology" \},\
+  \{ id: 209, text: "Screen a documentary about plastic pollution", impact: "Raises awareness in your community", category: "Advocacy" \},\
+  \{ id: 210, text: "Use a metal garden fork", impact: "More durable than plastic-handled tools", category: "Garden" \},\
+  \
+  // Week 31\
+  \{ id: 211, text: "Use silicone food storage bags", impact: "Reusable alternative to single-use plastic bags", category: "Kitchen" \},\
+  \{ id: 212, text: "Choose refillable cleaning products", impact: "Reduces plastic bottle waste by 70-90%", category: "Shopping" \},\
+  \{ id: 213, text: "Try plastic-free earplugs", impact: "Silicone or beeswax options are biodegradable", category: "Travel" \},\
+  \{ id: 214, text: "Try wooden or bamboo webcam covers", impact: "Plastic-free alternative to stickers", category: "Technology" \},\
+  \{ id: 215, text: "Use reusable bunting or fabric decorations", impact: "Replaces disposable plastic decorations", category: "Occasions" \},\
+  \{ id: 216, text: "Volunteer for environmental organizations", impact: "Supports work addressing plastic pollution", category: "Advocacy" \},\
+  \{ id: 217, text: "Try wooden or bamboo garden canes", impact: "Biodegradable alternative to plastic stakes", category: "Garden" \},\
+  \
+  // Week 32\
+  \{ id: 218, text: "Try stainless steel ice cube trays", impact: "Longer lasting than plastic versions", category: "Kitchen" \},\
+  \{ id: 219, text: "Buy loose leaf tea", impact: "Many tea bags contain plastic and come in plastic packaging", category: "Shopping" \},\
+  \{ id: 220, text: "Use solid shampoo and conditioner bars for travel", impact: "Eliminates plastic bottles and TSA liquid restrictions", category: "Travel" \},\
+  \{ id: 221, text: "Use leather or cork mousepads", impact: "Natural alternatives to synthetic mousepads", category: "Technology" \},\
+  \{ id: 222, text: "Try plastic-free holiday ornaments", impact: "Glass, wood, or fabric options last longer", category: "Occasions" \},\
+  \{ id: 223, text: "Create a plastic-free shopping guide", impact: "Makes sustainable shopping easier", category: "Reflection" \},\
+  \{ id: 224, text: "Use metal or wooden plant hangers", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 33\
+  \{ id: 225, text: "Make your own hummus and dips", impact: "Eliminates plastic tubs and packaging", category: "Kitchen" \},\
+  \{ id: 226, text: "Use cloth produce bags at grocery stores", impact: "Saves 100+ plastic produce bags yearly", category: "Shopping" \},\
+  \{ id: 227, text: "Use a cloth laundry bag for travel", impact: "Eliminates plastic laundry bags in hotels", category: "Travel" \},\
+  \{ id: 228, text: "Try natural rubber earphone tips", impact: "Biodegradable alternative to silicone", category: "Technology" \},\
+  \{ id: 229, text: "Use reusable advent calendars", impact: "Eliminates plastic packaging and small toys", category: "Occasions" \},\
+  \{ id: 230, text: "Post plastic-free product reviews online", impact: "Helps others find sustainable alternatives", category: "Advocacy" \},\
+  \{ id: 231, text: "Use a stainless steel or copper garden sprayer", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 34\
+  \{ id: 232, text: "Use glass spray bottles for oils", impact: "Eliminates plastic spray bottles", category: "Kitchen" \},\
+  \{ id: 233, text: "Try plastic-free toys", impact: "Wooden toys are more durable and biodegradable", category: "Shopping" \},\
+  \{ id: 234, text: "Try plastic-free shower caps", impact: "Silicone options last longer and are recyclable", category: "Travel" \},\
+  \{ id: 235, text: "Use cardboard smartphone projectors", impact: "Plastic-free entertainment option", category: "Technology" \},\
+  \{ id: 236, text: "Try sustainable gift experiences instead of objects", impact: "Reduces packaging waste entirely", category: "Occasions" \},\
+  \{ id: 237, text: "Teach someone else a plastic-free habit", impact: "Multiplies your impact through knowledge sharing", category: "Reflection" \},\
+  \{ id: 238, text: "Use a metal leaf rake", impact: "More durable than plastic versions", category: "Garden" \},\
+  \
+  // Week 35\
+  \{ id: 239, text: "Try cloth bowl covers", impact: "Reusable alternative to plastic wrap", category: "Kitchen" \},\
+  \{ id: 240, text: "Use a reusable shopping bag while traveling", impact: "Prepared for unexpected purchases", category: "Travel" \},\
+  \{ id: 241, text: "Try wooden or metal tablet styluses", impact: "More durable than plastic versions", category: "Technology" \},\
+  \{ id: 242, text: "Use glass or ceramic serving dishes", impact: "Eliminates disposable plastic platters", category: "Occasions" \},\
+  \{ id: 243, text: "Challenge friends to refuse single-use plastic", impact: "Creates accountability and support networks", category: "Advocacy" \},\
+  \{ id: 244, text: "Evaluate which plastic swaps worked best", impact: "Identifies most sustainable long-term habits", category: "Reflection" \},\
+  \{ id: 245, text: "Try wicker or wooden baskets for harvesting", impact: "Biodegradable alternative to plastic containers", category: "Garden" \},\
+  \
+  // Week 36\
+  \{ id: 246, text: "Make your own nut butters", impact: "Eliminates plastic jars and packaging", category: "Kitchen" \},\
+  \{ id: 247, text: "Try solid toothpaste tablets for travel", impact: "Eliminates plastic tubes and TSA liquid restrictions", category: "Travel" \},\
+  \{ id: 248, text: "Use plastic-free e-reader cases", impact: "Cork, fabric or leather reduce plastic waste", category: "Technology" \},\
+  \{ id: 249, text: "Try natural confetti (dried leaves or flowers)", impact: "Biodegradable alternative to plastic confetti", category: "Occasions" \},\
+  \{ id: 250, text: "Request plastic alternatives at hotels", impact: "Hospitality industry has significant plastic footprint", category: "Advocacy" \},\
+  \{ id: 251, text: "Make a plan for maintaining progress", impact: "Ensures changes become permanent habits", category: "Reflection" \},\
+  \{ id: 252, text: "Use canvas gardening gloves", impact: "Natural fiber alternative to synthetic gloves", category: "Garden" \},\
+  \
+  // Week 37\
+  \{ id: 253, text: "Use glass or metal popsicle molds", impact: "More durable than plastic versions", category: "Kitchen" \},\
+  \{ id: 254, text: "Use a plastic-free water purifier", impact: "Eliminates need for bottled water", category: "Travel" \},\
+  \{ id: 255, text: "Try bamboo or wooden gaming controllers", impact: "Partially reduces plastic in gaming peripherals", category: "Technology" \},\
+  \{ id: 256, text: "Use rechargeable batteries for holiday decorations", impact: "Reduces battery packaging waste", category: "Occasions" \},\
+  \{ id: 257, text: "Teach children about plastic pollution", impact: "Educates future consumers and advocates", category: "Advocacy" \},\
+  \{ id: 258, text: "Join an online plastic-free community", impact: "Creates support network for continued change", category: "Reflection" \},\
+  \{ id: 259, text: "Use wooden garden storage", impact: "More durable than plastic sheds", category: "Garden" \},\
+  \
+  // Week 38\
+  \{ id: 260, text: "Try silicone or beeswax stretch lids", impact: "Reusable alternative to plastic wrap", category: "Kitchen" \},\
+  \{ id: 261, text: "Use a bamboo or metal clothes brush", impact: "More durable than plastic versions", category: "Travel" \},\
+  \{ id: 262, text: "Use electronics with replaceable parts", impact: "Reduces need to replace entire devices", category: "Technology" \},\
+  \{ id: 263, text: "Try plastic-free greeting cards", impact: "Paper-only cards are recyclable", category: "Occasions" \},\
+  \{ id: 264, text: "Share home composting skills with neighbors", impact: "Reduces need for plastic-wrapped soil amendments", category: "Advocacy" \},\
+  \{ id: 265, text: "Create a sustainability corner in your home", impact: "Organizes and displays plastic-free alternatives", category: "Reflection" \},\
+  \{ id: 266, text: "Try wooden or bamboo brooms", impact: "More durable than plastic versions", category: "Home" \},\
+  \
+  // Week 39\
+  \{ id: 267, text: "Make your own salsa and dips", impact: "Eliminates plastic tubs and packaging", category: "Kitchen" \},\
+  \{ id: 268, text: "Use a stainless steel tiffin for picnics", impact: "Eliminates disposable containers", category: "Travel" \},\
+  \{ id: 269, text: "Try wood or metal computer accessories", impact: "More sustainable than plastic versions", category: "Technology" \},\
+  \{ id: 270, text: "Use cloth gift tags", impact: "Reusable alternative to paper and plastic", category: "Occasions" \},\
+  \{ id: 271, text: "Start a lending library for kitchen equipment", impact: "Reduces need for individual purchases", category: "Advocacy" \},\
+  \{ id: 272, text: "Document plastic waste for one week", impact: "Reveals remaining areas for improvement", category: "Reflection" \},\
+  \{ id: 273, text: "Switch to plastic-free phone case", impact: "Prevents non-biodegradable waste", category: "Technology" \},\
+  \
+  // Week 40\
+  \{ id: 274, text: "Use reusable cloth tea bags", impact: "Many tea bags contain plastic", category: "Kitchen" \},\
+  \{ id: 275, text: "Use a metal or silicone travel pill container", impact: "More durable than plastic versions", category: "Travel" \},\
+  \{ id: 276, text: "Properly recycle e-waste", impact: "Prevents electronics from landfills and recovers materials", category: "Technology" \},\
+  \{ id: 277, text: "Try plastic-free crackers/poppers", impact: "Fabric or paper options are more sustainable", category: "Occasions" \},\
+  \{ id: 278, text: "Encourage plastic-free lunches at work", impact: "Creates supportive environment for change", category: "Advocacy" \},\
+  \{ id: 279, text: "Research plastic pollution in your area", impact: "Creates local connection to global issue", category: "Reflection" \},\
+  \{ id: 280, text: "Try plastic-free clothes brushes", impact: "Wooden brushes with natural bristles are more sustainable", category: "Home" \},\
+  \
+  // Week 41\
+  \{ id: 281, text: "Try metal or wood kebab skewers", impact: "Reusable alternative to plastic versions", category: "Kitchen" \},\
+  \{ id: 282, text: "Try plastic-free travel slippers", impact: "Cotton or hemp options are washable", category: "Travel" \},\
+  \{ id: 283, text: "Try plastic-free furniture polish", impact: "Eliminates aerosol cans and plastic bottles", category: "Home" \},\
+  \{ id: 284, text: "Use natural materials for Halloween costumes", impact: "Reduces synthetic fabric and plastic accessories", category: "Occasions" \},\
+  \{ id: 285, text: "Create a guide to local plastic-free shopping", impact: "Makes sustainable choices easier for community", category: "Advocacy" \},\
+  \{ id: 286, text: "Set up automatic refill subscriptions", impact: "Makes plastic-free choices convenient", category: "Reflection" \},\
+  \{ id: 287, text: "Use concentrated fabric softener", impact: "Reduces plastic packaging by 50-70%", category: "Home" \},\
+  \
+  // Week 42\
+  \{ id: 288, text: "Make your own ketchup or BBQ sauce", impact: "Eliminates plastic squeeze bottles", category: "Kitchen" \},\
+  \{ id: 289, text: "Use a reusable garment bag", impact: "Eliminates plastic dry cleaning bags", category: "Travel" \},\
+  \{ id: 290, text: "Choose wooden curtain rods and rings", impact: "More durable than plastic versions", category: "Home" \},\
+  \{ id: 291, text: "Try bamboo or wooden party platters", impact: "Biodegradable alternative to plastic versions", category: "Occasions" \},\
+  \{ id: 292, text: "Suggest reusable containers for restaurant leftovers", impact: "Reduces takeout container waste", category: "Advocacy" \},\
+  \{ id: 293, text: "Develop a household plastic reduction policy", impact: "Creates shared commitment with family members", category: "Reflection" \},\
+  \{ id: 294, text: "Use biodegradable bin liners", impact: "Standard plastic bags take 500+ years to break down", category: "Home" \},\
+  \
+  // Week 43\
+  \{ id: 295, text: "Use glass or metal measuring spoons", impact: "More durable than plastic versions", category: "Kitchen" \},\
+  \{ id: 296, text: "Try plastic-free travel towels", impact: "Linen or hemp options dry quickly", category: "Travel" \},\
+  \{ id: 297, text: "Try plastic-free dish soap dispensers", impact: "Glass or ceramic options last longer", category: "Kitchen" \},\
+  \{ id: 298, text: "Use mason jars as drinking glasses for parties", impact: "Eliminates disposable plastic cups", category: "Occasions" \},\
+  \{ id: 299, text: "Ask your gym to install water refill stations", impact: "Reduces plastic bottle consumption", category: "Advocacy" \},\
+  \{ id: 300, text: "Create a plastic-free emergency kit", impact: "Prepares for disasters without single-use plastics", category: "Reflection" \},\
+  \{ id: 301, text: "Choose natural fiber shower loofahs", impact: "Plastic loofahs shed microplastics", category: "Bathroom" \},\
+  \
+  // Week 44\
+  \{ id: 302, text: "Try silicone or metal cupcake liners", impact: "Reusable alternative to paper with plastic coating", category: "Kitchen" \},\
+  \{ id: 303, text: "Use a bamboo travel lint roller", impact: "Eliminates single-use plastic lint rollers", category: "Travel" \},\
+  \{ id: 304, text: "Try plastic-free hair removal methods", impact: "Threading or sugaring instead of plastic razors", category: "Bathroom" \},\
+  \{ id: 305, text: "Try homemade edible gifts in glass jars", impact: "Eliminates commercial plastic packaging", category: "Occasions" \},\
+  \{ id: 306, text: "Support legislation for producer responsibility", impact: "Shifts burden from consumers to manufacturers", category: "Advocacy" \},\
+  \{ id: 307, text: "Make a plastic-free gift guide", impact: "Helps others make sustainable choices", category: "Reflection" \},\
+  \{ id: 308, text: "Use natural fiber welcome mats", impact: "Synthetic options shed microplastics and don't biodegrade", category: "Home" \},\
+  \
+  // Week 45\
+  \{ id: 309, text: "Make your own bread crumbs", impact: "Eliminates plastic packaging", category: "Kitchen" \},\
+  \{ id: 310, text: "Try plastic-free insect repellent", impact: "Metal tins or paper packaging are recyclable", category: "Travel" \},\
+  \{ id: 311, text: "Use reusable steel or silicone ice cube trays", impact: "Plastic trays crack and need replacement", category: "Kitchen" \},\
+  \{ id: 312, text: "Use paper or bamboo plates for large gatherings", impact: "Compostable alternative to plastic plates", category: "Occasions" \},\
+  \{ id: 313, text: "Donate to organizations fighting plastic pollution", impact: "Funds research and cleanup efforts", category: "Advocacy" \},\
+  \{ id: 314, text: "Plan a plastic-free vacation", impact: "Extends habits beyond everyday routines", category: "Reflection" \},\
+  \{ id: 315, text: "Use reusable steel or silicone ice cube trays", impact: "Plastic trays crack and need replacement", category: "Kitchen" \},\
+  \
+  // Week 46\
+  \{ id: 316, text: "Use stainless steel or glass mixing bowls", impact: "More durable than plastic versions", category: "Kitchen" \},\
+  \{ id: 317, text: "Use a stainless steel safety razor for travel", impact: "Eliminates disposable plastic razors", category: "Travel" \},\
+  \{ id: 318, text: "Use stainless steel drinking straws", impact: "Durable alternative to disposable plastic straws", category: "Kitchen" \},\
+  \{ id: 319, text: "Try tin cookie cutters", impact: "More durable than plastic versions", category: "Occasions" \},\
+  \{ id: 320, text: "Organize a workshop on plastic-free living", impact: "Shares practical skills with others", category: "Advocacy" \},\
+  \{ id: 321, text: "Research bioplastics vs. traditional plastics", impact: "Makes more informed packaging choices", category: "Reflection" \},\
+  \{ id: 322, text: "Use reusable silicone or cotton produce bags", impact: "Eliminates single-use plastic produce bags", category: "Shopping" \},\
+  \
+  // Week 47\
+  \{ id: 323, text: "Try plastic-free kitchen towels", impact: "100% cotton towels don't shed microplastics", category: "Kitchen" \},\
+  \{ id: 324, text: "Try a plastic-free travel journal", impact: "Paper and cloth options are biodegradable", category: "Travel" \},\
+  \{ id: 325, text: "Make your own pickles", impact: "Reuse glass jars and eliminate plastic", category: "Kitchen" \},\
+  \{ id: 326, text: "Use LED string lights for longer lifespan", impact: "Reduces need for frequent replacement and waste", category: "Occasions" \},\
+  \{ id: 327, text: "Contact brands about plastic packaging alternatives", impact: "Consumer demand drives product development", category: "Advocacy" \},\
+  \{ id: 328, text: "Create a plastic-free cleaning routine", impact: "Systematizes sustainable home maintenance", category: "Reflection" \},\
+  \{ id: 329, text: "Make your own jams and preserves", impact: "Reuse glass jars and eliminate plastic", category: "Kitchen" \},\
+  \
+  // Week 48\
+  \{ id: 330, text: "Make your own granola", impact: "Eliminates plastic packaging", category: "Kitchen" \},\
+  \{ id: 331, text: "Use washable cloth shoe bags", impact: "Eliminates plastic bags for shoes in luggage", category: "Travel" \},\
+  \{ id: 332, text: "Use glass or metal thermoses", impact: "More durable than plastic versions", category: "Kitchen" \},\
+  \{ id: 333, text: "Try wooden or paper gift boxes", impact: "Recyclable or reusable alternatives to plastic packaging", category: "Occasions" \},\
+  \{ id: 334, text: "Establish a plastic recycling station", impact: "Makes proper disposal easier", category: "Reflection" \},\
+  \{ id: 335, text: "Use metal or wooden serving platters", impact: "More sustainable than plastic or melamine", category: "Kitchen" \},\
+  \{ id: 336, text: "Try plastic-free travel games", impact: "Wooden or paper games reduce plastic waste", category: "Travel" \},\
+  \
+  // Week 49\
+  \{ id: 337, text: "Use metal or silicone cake pans", impact: "More durable than non-stick plastic coated versions", category: "Kitchen" \},\
+  \{ id: 338, text: "Pack waste-free airplane snacks", impact: "Reduces reliance on heavily packaged airplane food", category: "Travel" \},\
+  \{ id: 339, text: "Try stainless steel or glass containers for leftovers", impact: "Eliminates plastic containers", category: "Kitchen" \},\
+  \{ id: 340, text: "Use reusable table cloths", impact: "Eliminates disposable plastic table covers", category: "Occasions" \},\
+  \{ id: 341, text: "Write a letter to your future self", impact: "Reinforces commitment to plastic reduction", category: "Reflection" \},\
+  \{ id: 342, text: "Metal or ceramic measuring cups", impact: "More durable than plastic versions", category: "Kitchen" \},\
+  \{ id: 343, text: "Try sustainable toys made from wood or fabric", impact: "Biodegradable alternative to plastic toys", category: "Occasions" \},\
+  \
+  // Week 50\
+  \{ id: 344, text: "Make your own salad dressings", impact: "Eliminates plastic bottles", category: "Kitchen" \},\
+  \{ id: 345, text: "Use metal cookie tins for storage and gifting", impact: "Reusable alternative to plastic containers", category: "Occasions" \},\
+  \{ id: 346, text: "Create a plastic-free first aid kit", impact: "Reduces plastic in health emergencies", category: "Reflection" \},\
+  \{ id: 347, text: "Use metal or wooden salad servers", impact: "More durable than plastic versions", category: "Kitchen" \},\
+  \{ id: 348, text: "Try plastic-free Easter eggs", impact: "Wooden, fabric, or cardboard options are reusable", category: "Occasions" \},\
+  \{ id: 349, text: "Track your plastic waste reduction", impact: "Quantifies environmental impact of changes", category: "Reflection" \},\
+  \{ id: 350, text: "Try wooden or bamboo toothpicks", impact: "Biodegradable unlike plastic versions", category: "Kitchen" \},\
+  \
+  // Week 51\
+  \{ id: 351, text: "Use natural dyes for Easter eggs", impact: "Eliminates plastic packaging from commercial dyes", category: "Occasions" \},\
+  \{ id: 352, text: "Research microplastic reduction in laundry", impact: "Addresses invisible plastic pollution", category: "Reflection" \},\
+  \{ id: 353, text: "Buy dish soap in cardboard packaging", impact: "Eliminates plastic bottles", category: "Shopping" \},\
+  \{ id: 354, text: "Try plastic-free gift wrapping techniques", impact: "Furoshiki cloth wrapping is reusable", category: "Occasions" \},\
+  \{ id: 355, text: "Organize a plastic-free community swap", impact: "Shares resources and reduces new purchases", category: "Reflection" \},\
+  \{ id: 356, text: "Try a bamboo toilet brush", impact: "Eliminates plastic brush waste", category: "Bathroom" \},\
+  \{ id: 357, text: "Try solid conditioner bars", impact: "Saves 6-12 plastic bottles yearly", category: "Bathroom" \},\
+  \
+  // Week 52 and Day 365\
+  \{ id: 358, text: "Create a personal plastic reduction manifesto", impact: "Articulates values and commitment", category: "Reflection" \},\
+  \{ id: 359, text: "Plan next year's plastic-free garden", impact: "Continues sustainable outdoor practices", category: "Reflection" \},\
+  \{ id: 360, text: "Research local recycling capabilities", impact: "Ensures proper disposal of unavoidable plastics", category: "Reflection" \},\
+  \{ id: 361, text: "Make DIY face masks", impact: "Eliminates single-use sheet mask waste", category: "Bathroom" \},\
+  \{ id: 362, text: "Use plastic-free dish soap", impact: "Saves 6-12 plastic bottles yearly", category: "Kitchen" \},\
+  \{ id: 363, text: "Shop at bulk food stores with your own containers", impact: "Eliminates packaging waste entirely", category: "Shopping" \},\
+  \{ id: 364, text: "Celebrate your year of plastic reduction", impact: "Acknowledges progress and commitment", category: "Reflection" \},\
+  \{ id: 365, text: "Commit to continuing your plastic reduction journey", impact: "Ensures sustainable habits become permanent lifestyle", category: "Reflection" \}\
+];}
