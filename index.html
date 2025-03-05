@@ -949,7 +949,7 @@
         const todaySuggestion = getTodaySuggestion(); // or however you access today's suggestion
 
         // Construct share text
-        const shareText = `Today's plastic elimination: ${todaySuggestion.text} with an impact of ${todaySuggestion.impact}. Click to learn how to use less plastic!`;
+        const shareText = `Today's plastic elimination: ${todaySuggestion.text}. What does that equal in a year? ${todaySuggestion.impact}. Click to use less plastic!`;
       const shareUrl = "https://plastic-eliminator.netlify.app";
 
         if (navigator.share) {
