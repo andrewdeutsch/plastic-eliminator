@@ -786,7 +786,13 @@
                       <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                   </div>
-                  
+                 
+                  <button
+                    onClick={shareCompletedSuggestion}
+                    className="px-4 py-2 mt-2 mb-6 border border-blue-600 text-blue-600 font-semibold rounded hover:bg-blue-600 hover:text-white transition duration-300"
+                  >
+                    Share Completed Suggestion
+                  </button>
 
                 </div>
                 ) : (
@@ -938,6 +944,34 @@
             </div>
           </div>
         );
+
+        const shareCompletedSuggestion = () => {
+        const todaySuggestion = getTodaySuggestion(); // or however you access today's suggestion
+
+        // Construct share text
+        const shareText = `Today's plastic elimination: ${todaySuggestion.text} with an impact of ${todaySuggestion.impact}. Click to learn how to use less plastic!`;
+      const shareUrl = "https://plastic-eliminator.netlify.app";
+
+        if (navigator.share) {
+          // If the browser supports the Web Share API
+          navigator
+            .share({
+              title: "Plastic Eliminator Challenge",
+              text: shareText,
+              url: shareUrl
+            })
+            .then(() => console.log("Shared successfully"))
+            .catch((err) => console.log("Error sharing", err));
+        } else {
+          // Fallback if Web Share API isn't supported
+          alert(
+          "Your device/browser does not support the Share API. " +
+          "Please share the following text manually:\n\n" +
+          shareText +
+          "\n" + shareUrl
+        );
+        }
+      };
 
 
           return (
