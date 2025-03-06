@@ -16,12 +16,55 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('Service worker registered'))
-            .catch(err => console.log('Service worker registration failed', err));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => {
+            console.log('Service worker registered successfully');
+            
+            // Request periodic background sync when supported
+            if ('periodicSync' in reg) {
+              // Try to register for periodic sync - for daily checks
+              navigator.permissions.query({name: 'periodic-background-sync'})
+                .then((status) => {
+                  if (status.state === 'granted') {
+                    reg.periodicSync.register('daily-check', {
+                      minInterval: 24 * 60 * 60 * 1000 // 24 hours
+                    }).then(() => {
+                      console.log('Periodic sync registered');
+                    }).catch(e => {
+                      console.log('Periodic sync registration failed:', e);
+                    });
+                  }
+                });
+            }
+            
+            // Set up service worker update monitoring
+            reg.onupdatefound = () => {
+              const newWorker = reg.installing;
+              newWorker.onstatechange = () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('New service worker available, updating app');
+                  // Notify user of update or automatically refresh
+                  if (confirm('New version available! Reload to update?')) {
+                    window.location.reload();
+                  }
+                }
+              };
+            };
+          })
+          .catch(err => console.log('Service worker registration failed', err));
+        
+        // Set up message listener for service worker communications
+        navigator.serviceWorker.addEventListener('message', event => {
+          console.log('Message from service worker:', event.data);
+          if (event.data.type === 'CHECK_DAY_CHANGE') {
+            // Force a check for day changes when requested by service worker
+            // This will be handled by React components
+            window.dispatchEvent(new CustomEvent('checkDayChange'));
+          }
         });
-      }
+      });
+    }
     </script>
     
 </head>
@@ -556,55 +599,170 @@
           }, [eliminatedPlastics, targets, currentDay]);
 
           // Check if date has changed and update if needed
+          // Replace your existing useEffect for day change detection with this improved version
           React.useEffect(() => {
-          const checkForNewDay = () => {
-            const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
-            const today = getLocalDate();
-            
-            // Check if the date has changed since last check
-            const lastCheckedDate = localStorage.getItem('plasticEliminatorLastCheckedDate');
-            const dateHasChanged = lastCheckedDate && !isSameDay(lastCheckedDate, today);
-            
-            // Store today as the last checked date
-            localStorage.setItem('plasticEliminatorLastCheckedDate', today);
-            
-            // If the date has changed
-            if (dateHasChanged) {
-              // Get yesterday's suggestion
-              const prevDay = currentDay;
-              const index = (prevDay - 1) % fullYearSuggestions.length;
-              const yesterdaySuggestion = fullYearSuggestions[index];
+            const checkForNewDay = () => {
+              console.log('Checking for day changes...');
+              const lastCompletedDate = localStorage.getItem('plasticEliminatorLastCompletedDate');
+              const today = getLocalDate();
               
-              // Check if yesterday's suggestion was completed
-              if (!completedToday) {
-                // Add to targets if not completed
-                const newTargets = [...targets, {
-                  ...yesterdaySuggestion,
-                  date: lastCheckedDate // Use the previous date
-                }];
-                setTargets(newTargets);
+              // Check if the date has changed since last check
+              const lastCheckedDate = localStorage.getItem('plasticEliminatorLastCheckedDate');
+              let dateHasChanged = false;
+              
+              // Properly detect date changes even after app has been closed
+              if (lastCheckedDate) {
+                dateHasChanged = !isSameDay(lastCheckedDate, today);
               }
               
-              // Advance to next day
-              setCurrentDay(prevDay => prevDay + 1);
-              // Reset completion status
-              setCompletedToday(false);
-            }
+              console.log(`Today: ${today}, Last checked: ${lastCheckedDate}, Date changed: ${dateHasChanged}`);
+              
+              // If we have NEVER checked before, just set today as first check and exit
+              if (!lastCheckedDate) {
+                console.log('First time checking, initializing date');
+                localStorage.setItem('plasticEliminatorLastCheckedDate', today);
+                return;
+              }
+              
+              // Check for any missed days (if app wasn't opened for multiple days)
+              if (dateHasChanged) {
+                const lastCheckedDay = new Date(lastCheckedDate);
+                const todayDate = new Date(today);
+                const daysDifference = Math.floor((todayDate - lastCheckedDay) / (1000 * 60 * 60 * 24));
+                
+                console.log(`Days difference: ${daysDifference}`);
+                
+                try {
+                  // Handle multiple missed days
+                  if (daysDifference > 1) {
+                    console.log(`App was closed for ${daysDifference} days, handling missed days`);
+                    
+                    // Process each missed day - make a copy to avoid mutation during loop
+                    let updatedTargets = [...targets];
+                    
+                    for (let i = 1; i <= daysDifference; i++) {
+                      const missedDate = new Date(lastCheckedDay);
+                      missedDate.setDate(lastCheckedDay.getDate() + i);
+                      const missedDateStr = missedDate.getFullYear() + '-' + 
+                                    String(missedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                                    String(missedDate.getDate()).padStart(2, '0');
+                      
+                      // Only process days before today
+                      if (!isSameDay(missedDateStr, today)) {
+                        const dayToProcess = currentDay + (i - 1);
+                        const index = (dayToProcess - 1) % fullYearSuggestions.length;
+                        const missedSuggestion = fullYearSuggestions[index];
+                        
+                        // Check if this suggestion was already completed
+                        const wasMissedDayCompleted = lastCompletedDate && isSameDay(lastCompletedDate, missedDateStr);
+                        
+                        if (!wasMissedDayCompleted) {
+                          // Add to targets if not completed
+                          updatedTargets.push({
+                            ...missedSuggestion,
+                            date: missedDateStr
+                          });
+                        }
+                      }
+                    }
+                    
+                    // Now update state with all new targets at once
+                    setTargets(updatedTargets);
+                    
+                    // Advance to current day based on days difference
+                    setCurrentDay(prevDay => {
+                      const newDay = prevDay + daysDifference;
+                      console.log(`Advancing day from ${prevDay} to ${newDay}`);
+                      return newDay;
+                    });
+                    
+                  } else {
+                    // Just handle yesterday normally
+                    const prevDay = currentDay;
+                    const index = (prevDay - 1) % fullYearSuggestions.length;
+                    const yesterdaySuggestion = fullYearSuggestions[index];
+                    
+                    // Check if yesterday's suggestion was completed
+                    const wasYesterdayCompleted = lastCompletedDate && isSameDay(lastCompletedDate, lastCheckedDate);
+                    
+                    console.log(`Yesterday (${lastCheckedDate}) completed: ${wasYesterdayCompleted}`);
+                    
+                    if (!wasYesterdayCompleted) {
+                      // Add to targets if not completed
+                      console.log(`Adding yesterday's task to targets: ${yesterdaySuggestion.text}`);
+                      setTargets(prevTargets => [...prevTargets, {
+                        ...yesterdaySuggestion,
+                        date: lastCheckedDate
+                      }]);
+                    }
+                    
+                    // Advance to next day
+                    setCurrentDay(prevDay => {
+                      const newDay = prevDay + 1;
+                      console.log(`Advancing day from ${prevDay} to ${newDay}`);
+                      return newDay;
+                    });
+                  }
+                  
+                  // Reset completion status for today
+                  setCompletedToday(false);
+                  
+                } catch (error) {
+                  console.error('Error during day change processing:', error);
+                }
+              }
+              
+              // Always update last checked date 
+              localStorage.setItem('plasticEliminatorLastCheckedDate', today);
+              
+              // If we just need to check if we completed today's task
+              if (lastCompletedDate) {
+                const isCompletedToday = isSameDay(lastCompletedDate, today);
+                console.log(`Checking if completed today: ${isCompletedToday}`);
+                setCompletedToday(isCompletedToday);
+              }
+            };
             
-            // If we just need to check if we completed today's task
-            else if (lastCompletedDate) {
-              setCompletedToday(isSameDay(lastCompletedDate, today));
-            }
-          };
-          
-          // Check on initial load
-          checkForNewDay();
-          
-          // Set up interval to check periodically
-          const interval = setInterval(checkForNewDay, 60000); // Check every minute
-          
-          return () => clearInterval(interval);
-        }, [currentDay, completedToday, targets]);
+            // Custom event handler for checking day changes
+            const handleCustomDayCheck = () => {
+              console.log('Received custom day change check event');
+              checkForNewDay();
+            };
+            
+            // Check on initial load - more important now for PWA
+            checkForNewDay();
+            
+            // Set up interval to check periodically while app is open
+            const interval = setInterval(checkForNewDay, 30000); // Check every 30 seconds
+            
+            // Listen for custom events that might come from service worker
+            window.addEventListener('checkDayChange', handleCustomDayCheck);
+            
+            // Additional event handlers for PWA lifecycle
+            window.addEventListener('focus', checkForNewDay);
+            window.addEventListener('online', checkForNewDay); // Check when coming back online
+            
+            document.addEventListener('visibilitychange', () => {
+              if (document.visibilityState === 'visible') {
+                console.log('App became visible, checking day changes');
+                checkForNewDay();
+              }
+            });
+            
+            // Add event listener for beforeunload to update last checked date
+            window.addEventListener('beforeunload', () => {
+              localStorage.setItem('plasticEliminatorLastCheckedDate', getLocalDate());
+            });
+            
+            return () => {
+              clearInterval(interval);
+              window.removeEventListener('focus', checkForNewDay);
+              window.removeEventListener('online', checkForNewDay);
+              window.removeEventListener('checkDayChange', handleCustomDayCheck);
+              document.removeEventListener('visibilitychange', checkForNewDay);
+              window.removeEventListener('beforeunload', checkForNewDay);
+            };
+          }, [currentDay, completedToday, targets, fullYearSuggestions]);
 
           // Get today's suggestion
           const getTodaySuggestion = () => {
