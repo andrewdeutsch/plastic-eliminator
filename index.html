@@ -715,19 +715,21 @@
             }
             
             return (
-              <div className="mb-6 bg-gray-100 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Your Progress</h3>
-                <p className="mb-2">Day {currentDay} of 365</p>
-                <div className="w-full bg-gray-300 rounded-full h-2.5">
-                  <div 
-                    className="bg-green-600 h-2.5 rounded-full" 
+              <div className="p-3 bg-gray-100 rounded-lg">              
+              <div className="mb-2 p-1">
+                <p className="text-xs font-bold">Day {currentDay} of 365</p>
+                <div className="flex mt-1">
+                  <div
+                    className="bg-green-600 h-4 rounded-full"
                     style={{ width: `${percentComplete}%` }}
                   ></div>
+                  <div className="flex-grow bg-gray-300 h-4"></div>
                 </div>
-                <p className="mt-2 text-sm text-gray-600">
-                  {completed} out of {total} plastic habits eliminated ({displayPercent})
+                <p className="mt-2 text-xs">
+                  {completed} out of {total} plastic habits eliminated ({displayPercent}) 
                 </p>
               </div>
+            </div>
             );
           };
           
@@ -739,7 +741,7 @@
                   onClick={() => setCurrentView('home')}
                   className="text-2xl font-bold text-red-700 cursor-pointer hover:text-red-800 transition-colors"
                 >
-                  365 Days of Less Plastic
+                  365 Days of <br />Less Plastic
                 </h1>
                 <div className="flex space-x-6">
                   <button 
@@ -771,7 +773,7 @@
             
             return (
               <div className="flex flex-col items-center px-4 py-8">
-                <h2 className="text-3xl font-bold text-red-700 mb-0">TODAY</h2>
+                <h2 className="text-2xl font-bold text-red-700 mb-0">TODAY</h2>
                 <p className="text-sm text-gray-600 mb-6">{new Date().toLocaleDateString()}</p>
 
                 
@@ -819,7 +821,7 @@
                   </div>
                   
                 )}
-                <div className="mb-6 bg-gray-100 p-4 rounded-lg w-full">
+                <div className="mb-6 bg-gray-100 rounded-lg w-full">
                     {renderProgressStats()}
                   </div>
               </div>
@@ -829,25 +831,26 @@
           // Eliminated view
           const renderEliminatedView = () => (
             <div className="px-4 py-8">
-              <h2 className="text-3xl font-bold text-red-700 text-center mb-8">PLASTICS I'VE ELIMINATED</h2>
+              <h2 className="text-2xl font-bold text-red-700 text-center mb-5">PLASTICS I'VE ELIMINATED</h2>
               
               {eliminatedPlastics.length === 0 ? (
                 <p className="text-center py-4">You haven't eliminated any plastic habits yet. Start with today's suggestion!</p>
               ) : (
                 <div>
-                  <div className="space-y-6 mb-8">
+                  <div className="mb-8">
+                    {renderProgressStats()}
+                  </div>
+                  <div className="space-y-6 mb-8 pl-4">
                     {eliminatedPlastics.map((item, index) => (
                       <div key={index} className="border-b pb-4">
-                        <p className="font-bold">{formatDate(item.date)}</p>
+                        <p className="font-bold text-xs">{formatDate(item.date)}</p>
                         <p>{item.text}</p>
                         <p className="text-sm text-gray-600">{item.impact}</p>
                       </div>
                     ))}
                   </div>
                   
-                  <div className="mb-8">
-                    {renderProgressStats()}
-                  </div>
+                  
                   
                   <div className="flex flex-col items-center">
                     {exportSuccess ? (
@@ -858,20 +861,20 @@
                     ) : null}
                     
                     <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                      <button
-                        onClick={exportAccomplishments}
-                        className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-                      >
-                        Verify Data is Saved
-                      </button>
-                      
-                      <button
-                        onClick={downloadAccomplishments}
-                        className="px-6 py-2 border border-gray-400 text-gray-600 rounded-md hover:bg-gray-100 transition-colors"
-                      >
-                        Download Backup Copy
-                      </button>
-                    </div>
+                    <button
+                      onClick={exportAccomplishments}
+                      className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      Confirm Saved Data
+                    </button>
+                    
+                    <button
+                      onClick={downloadAccomplishments}
+                      className="px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Download Data
+                    </button>
+                  </div>
                   </div>
                 </div>
               )}
@@ -881,12 +884,15 @@
           // Targets view
           const renderTargetsView = () => (
             <div className="px-4 py-8">
-              <h2 className="text-3xl font-bold text-red-700 text-center mb-8">TARGETS</h2>
-              
+              <h2 className="text-2xl font-bold text-red-700 text-center mb-5">ELIMINATION TARGETS</h2>
+              <div className="mt-8">
+                {renderProgressStats()}
+              </div>
               {targets.length === 0 ? (
                 <p className="text-center py-4">No pending targets. Great job keeping up!</p>
               ) : (
                 <div className="space-y-8">
+                  
                   {targets.map((target, index) => (
                     <div key={index} className="border-b pb-6">
                       <p className="text-xl mb-2">Previous task I haven't completed</p>
@@ -905,9 +911,7 @@
                  
                 </div>
               )}
-              <div className="mt-8">
-            {renderProgressStats()}
-          </div>
+              
             </div>
           );
           
@@ -930,7 +934,7 @@
                 And if you're thinking "Why so much red?", it's because eliminating plastics is an emergency. If this app's too slow for you, get on your favorite search engine and find more options.
                 </p>
               <p className="mb-4">
-                Now let's go get rid of that plastic. 🎯
+                Let's get rid of some plastic. 🎯
               </p>
             </div>
             
